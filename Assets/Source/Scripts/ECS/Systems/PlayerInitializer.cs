@@ -52,6 +52,13 @@ namespace Source.Scripts.ECS.Systems
 
             ref var transformData = ref _componenter.Add<TransformData>(playerEntity);
             transformData.Value = characterHandler.PlayerCharacter.Transform;
+            
+            ref var healthData = ref _componenter.Add<HealthData>(playerEntity);
+            healthData.InitializeValues(infoHub.PlayerInfo.Health);
+
+            ref var entityObjectData = ref _componenter.Add<EntityObjectData>(playerEntity);
+            entityObjectData.Value = characterHandler.PlayerCharacter;
+            
 
         }
     }
