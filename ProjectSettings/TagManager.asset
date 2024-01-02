@@ -38,6 +38,12 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: backgaund
+    uniqueID: 321786415
+    locked: 0
+  - name: terrain
+    uniqueID: 3499245319
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0
