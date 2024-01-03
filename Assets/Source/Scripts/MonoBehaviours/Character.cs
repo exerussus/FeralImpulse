@@ -3,7 +3,9 @@ using UnityEngine;
 
 namespace Source.Scripts.MonoBehaviours
 {
-    public class Character : MonoBehaviour, IEntityObject, IHealthy
+    public class Character : MonoBehaviour, 
+        ICharacter, IEntityObject, IHealthy, IPhysicalBody, IGroundChecker, 
+        ISideChecker, IDisplayable, IAnimable, ITouchable, IWeaponable
     {
         [SerializeField] private int entity;
         [SerializeField] private float health;
@@ -27,7 +29,7 @@ namespace Source.Scripts.MonoBehaviours
         public Collider2D Collider => entityCollider;
         public int Entity => entity;
         public float Health => health;
-
+        
         public void InitializeEntity(int value) => entity = value;
     }
 }
