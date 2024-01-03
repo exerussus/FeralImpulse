@@ -59,7 +59,10 @@ namespace Source.Scripts.ECS.Systems
             ref var entityObjectData = ref _componenter.Add<EntityObjectData>(playerEntity);
             entityObjectData.Value = characterHandler.PlayerCharacter;
             entityObjectData.Value.InitializeEntity(playerEntity);
-            
+
+            ref var weaponColliderHandler = ref _componenter.Add<WeaponColliderHandlerData>(playerEntity);
+            weaponColliderHandler.Value = characterHandler.PlayerCharacter.WeaponColliderHandler;
+
 
         }
     }

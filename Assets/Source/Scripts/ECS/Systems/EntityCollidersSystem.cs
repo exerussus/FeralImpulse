@@ -23,7 +23,7 @@ namespace Source.Scripts.ECS.Systems
             _world = systems.GetWorld();
             _componenter = systems.GetSharedEcsSystem<Componenter>();
             _initializeFilter = _world.Filter<EntityObjectData>().Exc<InitializeColliderMark>().End();
-            _activatedWeaponFilter = _world.Filter<WeaponColliderData>().Inc<WeaponActivatedMark>().End();
+            _activatedWeaponFilter = _world.Filter<WeaponColliderHandlerData>().Inc<WeaponActivatedData>().End();
             _entityObjects = new Dictionary<Collider2D, IEntityObject>();
             _entityObjectsRevers = new Dictionary<IEntityObject, Collider2D>();
         }
@@ -45,8 +45,8 @@ namespace Source.Scripts.ECS.Systems
 
         private void DetectWeaponCollisions(int originEntity)
         {
-            ref var weaponColliderData = ref _componenter.Get<WeaponColliderData>(originEntity);
-            var detectedList = weaponColliderData.Value.Detected;
+            ref var weaponColliderData = ref _componenter.Get<WeaponColliderHandlerData>(originEntity);
+            var detectedList = weaponColliderData.Value.CurrentWeapon.Detected;
 
             if (detectedList.Count == 0) return;
 
