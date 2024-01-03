@@ -22,6 +22,7 @@ namespace Source.EasyECS
             fixedUpdateSystems.Add(new FlipRenderSystem());
             fixedUpdateSystems.Add(new CharacterAnimationSystem());
             fixedUpdateSystems.Add(new CombatSystem());
+            fixedUpdateSystems.Add(new EntityCollidersSystem());
         }
 
         protected override void SetLateUpdateSystems(IEcsSystems lateUpdateSystems)
