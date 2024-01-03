@@ -58,6 +58,7 @@ namespace Source.Scripts.ECS.Systems
 
             ref var entityObjectData = ref _componenter.Add<EntityObjectData>(playerEntity);
             entityObjectData.Value = characterHandler.PlayerCharacter;
+            entityObjectData.Value.InitializeEntity(playerEntity);
             
 
         }
