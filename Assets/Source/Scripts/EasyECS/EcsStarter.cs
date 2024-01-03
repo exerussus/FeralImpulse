@@ -7,7 +7,7 @@ namespace Source.EasyECS
     {
         protected override void SetInitSystems(IEcsSystems initSystems)
         {
-            initSystems.Add(new PlayerInitializer());
+            initSystems.Add(new PlayerInitializerSystem());
         }
 
         protected override void SetUpdateSystems(IEcsSystems updateSystems)
@@ -23,6 +23,7 @@ namespace Source.EasyECS
             fixedUpdateSystems.Add(new CharacterAnimationSystem());
             fixedUpdateSystems.Add(new CombatSystem());
             fixedUpdateSystems.Add(new EntityCollidersSystem());
+            
         }
 
         protected override void SetLateUpdateSystems(IEcsSystems lateUpdateSystems)

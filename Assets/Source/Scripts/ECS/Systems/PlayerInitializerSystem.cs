@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Source.Scripts.ECS.Systems
 {
-    public class PlayerInitializer : IEcsInitSystem
+    public class PlayerInitializerSystem : IEcsInitSystem
     {
         private EcsWorld _world;
         private Componenter _componenter;
@@ -58,7 +58,11 @@ namespace Source.Scripts.ECS.Systems
 
             ref var entityObjectData = ref _componenter.Add<EntityObjectData>(playerEntity);
             entityObjectData.Value = characterHandler.PlayerCharacter;
-            
+            entityObjectData.Value.InitializeEntity(playerEntity);
+
+            ref var weaponColliderHandler = ref _componenter.Add<WeaponColliderHandlerData>(playerEntity);
+            weaponColliderHandler.Value = characterHandler.PlayerCharacter.WeaponColliderHandler;
+
 
         }
     }

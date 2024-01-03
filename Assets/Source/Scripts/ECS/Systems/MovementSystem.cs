@@ -53,6 +53,12 @@ namespace Source.Scripts.ECS.Systems
             
         }
 
+        private int GetFlipMultiply(int entity)
+        {
+            ref var transformData = ref _componenter.Get<TransformData>(entity);
+            return transformData.Value.localScale.x < 0 ? -1 : 1;
+        }
+        
         private void MoveLeft(int entity)
         {
             ref var rigidbodyData = ref _componenter.Get<RigidbodyData>(entity);
@@ -82,7 +88,7 @@ namespace Source.Scripts.ECS.Systems
             _componenter.Del<JumpRequest>(entity);
             ref var rigidbodyData = ref _componenter.Get<RigidbodyData>(entity);
             ref var jumpForceData = ref _componenter.Get<JumpForceData>(entity);
-            rigidbodyData.Value.AddForce(Vector2.up * jumpForceData.Value, Impulse);
+            rigidbodyData.Value.AddRelativeForce(Vector2.up * jumpForceData.Value, Impulse);
             _componenter.AddOrGet<AnimationJumpRequest>(entity);
         }
         private void JumpBoth(int entity)
@@ -90,7 +96,7 @@ namespace Source.Scripts.ECS.Systems
             _componenter.Del<JumpRequest>(entity);
             ref var rigidbodyData = ref _componenter.Get<RigidbodyData>(entity);
             ref var jumpForceData = ref _componenter.Get<JumpForceData>(entity);
-            rigidbodyData.Value.AddForce(VectorUp * jumpForceData.Value, Impulse);
+            rigidbodyData.Value.AddRelativeForce(VectorUp * jumpForceData.Value, Impulse);
             _componenter.AddOrGet<AnimationJumpRequest>(entity);
         }
         private void JumpLeftSide(int entity)
@@ -98,8 +104,8 @@ namespace Source.Scripts.ECS.Systems
             _componenter.Del<JumpRequest>(entity);
             ref var rigidbodyData = ref _componenter.Get<RigidbodyData>(entity);
             ref var jumpForceData = ref _componenter.Get<JumpForceData>(entity);
-            var direction = (VectorUp + VectorRight);
-            rigidbodyData.Value.AddForce(direction * jumpForceData.Value, Impulse);
+            var direction = (VectorUp + VectorRight * GetFlipMultiply(entity));
+            rigidbodyData.Value.AddRelativeForce(direction * jumpForceData.Value, Impulse);
             _componenter.AddOrGet<AnimationJumpRequest>(entity);
             _componenter.AddOrGet<FlipJumpLeftRequest>(entity);
         }
@@ -108,8 +114,8 @@ namespace Source.Scripts.ECS.Systems
             _componenter.Del<JumpRequest>(entity);
             ref var rigidbodyData = ref _componenter.Get<RigidbodyData>(entity);
             ref var jumpForceData = ref _componenter.Get<JumpForceData>(entity);
-            var direction = (VectorUp + VectorLeft);
-            rigidbodyData.Value.AddForce(direction * jumpForceData.Value, Impulse);
+            var direction = (VectorUp + VectorLeft * GetFlipMultiply(entity));
+            rigidbodyData.Value.AddRelativeForce(direction * jumpForceData.Value, Impulse);
             _componenter.AddOrGet<AnimationJumpRequest>(entity);
             _componenter.AddOrGet<FlipJumpRightRequest>(entity);
         }
