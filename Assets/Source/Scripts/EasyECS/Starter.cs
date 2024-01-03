@@ -127,6 +127,15 @@ namespace Source.EasyECS
         {
             _fixedUpdateSystems = new EcsSystems(_world, _gameSharing);
             SetFixedUpdateSystems(_fixedUpdateSystems);
+            
+#if UNITY_EDITOR
+                // Регистрируем отладочные системы по контролю за состоянием каждого отдельного мира:
+                // .Add (new Leopotam.EcsLite.UnityEditor.EcsWorldDebugSystem ("events"))
+                _fixedUpdateSystems.Add(new UnityEditor.EcsWorldDebugSystem());
+                // Регистрируем отладочные системы по контролю за текущей группой систем. 
+                _fixedUpdateSystems.Add(new UnityEditor.EcsSystemsDebugSystem());
+#endif
+            
             _fixedUpdateSystems.Inject();
             _fixedUpdateSystemState = _fixedUpdateSystems.SystemsState;
             AddToShare(_fixedUpdateSystems);
