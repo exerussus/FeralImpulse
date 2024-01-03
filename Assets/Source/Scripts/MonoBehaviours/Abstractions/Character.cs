@@ -1,9 +1,8 @@
-﻿using Source.Scripts.MonoBehaviours.Abstractions;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace Source.Scripts.MonoBehaviours
+namespace Source.Scripts.MonoBehaviours.Abstractions
 {
-    public class Character : MonoBehaviour, 
+    public abstract class Character : MonoBehaviour, 
         ICharacter, IEntityObject, IHealthy, IPhysicalBody, IGroundChecker, 
         ISideChecker, IDisplayable, IAnimable, ITouchable, IWeaponable, IMovable
     {

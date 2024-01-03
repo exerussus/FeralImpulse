@@ -376,9 +376,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   entity: 0
-  health: 0
-  moveSpeed: 0
-  jumpForce: 0
+  health: 30
+  moveSpeed: 9
+  jumpForce: 5
   rigidbodyValue: {fileID: 438082013}
   groundChecker: {fileID: 2087477194}
   leftSideChecker: {fileID: 60957488}

@@ -6,8 +6,8 @@ namespace Source.MonoBehaviours
 {
     public class CharactersHandler : EasyMonoBehaviour
     {
-        [SerializeField] private Character playerCharacter;
-        public Character PlayerCharacter => playerCharacter;
+        [SerializeField] private PlayerCharacter playerCharacter;
+        public PlayerCharacter PlayerCharacter => playerCharacter;
         
 
     }
