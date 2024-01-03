@@ -7,7 +7,7 @@ namespace Source.EasyECS
     {
         protected override void SetInitSystems(IEcsSystems initSystems)
         {
-            initSystems.Add(new PlayerInitializerSystem());
+            initSystems.Add(new InitializerSystem());
         }
 
         protected override void SetUpdateSystems(IEcsSystems updateSystems)

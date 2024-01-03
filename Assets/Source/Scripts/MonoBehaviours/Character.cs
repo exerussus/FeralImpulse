@@ -5,10 +5,12 @@ namespace Source.Scripts.MonoBehaviours
 {
     public class Character : MonoBehaviour, 
         ICharacter, IEntityObject, IHealthy, IPhysicalBody, IGroundChecker, 
-        ISideChecker, IDisplayable, IAnimable, ITouchable, IWeaponable
+        ISideChecker, IDisplayable, IAnimable, ITouchable, IWeaponable, IMovable
     {
         [SerializeField] private int entity;
         [SerializeField] private float health;
+        [SerializeField] private float moveSpeed;
+        [SerializeField] private float jumpForce;
         [SerializeField] private Rigidbody2D rigidbodyValue;
         [SerializeField] private GroundChecker groundChecker;
         [SerializeField] private SideChecker leftSideChecker;
@@ -29,7 +31,10 @@ namespace Source.Scripts.MonoBehaviours
         public Collider2D Collider => entityCollider;
         public int Entity => entity;
         public float Health => health;
-        
+        public float MoveSpeed => moveSpeed;
+        public float JumpForce => jumpForce;
+
         public void InitializeEntity(int value) => entity = value;
+        
     }
 }
