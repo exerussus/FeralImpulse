@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Source.Scripts.MonoBehaviours
 {
-    public class Destructible : MonoBehaviour, IEntityObject
+    public class Destructible : MonoBehaviour, IDestructible, IEntityObject
     {
         [SerializeField] private int entity;
         [SerializeField] private SpriteRenderer spriteRenderer;
