@@ -3,9 +3,10 @@ using UnityEngine;
 
 namespace Source.Scripts.MonoBehaviours
 {
-    public class Character : MonoBehaviour, IEntityObject
+    public class Character : MonoBehaviour, IEntityObject, IHealthy
     {
         [SerializeField] private int entity;
+        [SerializeField] private float health;
         [SerializeField] private Rigidbody2D rigidbodyValue;
         [SerializeField] private GroundChecker groundChecker;
         [SerializeField] private SideChecker leftSideChecker;
@@ -25,7 +26,8 @@ namespace Source.Scripts.MonoBehaviours
         public WeaponColliderHandler WeaponColliderHandler => weaponColliderHandler;
         public Collider2D Collider => entityCollider;
         public int Entity => entity;
-        
+        public float Health => health;
+
         public void InitializeEntity(int value) => entity = value;
     }
 }

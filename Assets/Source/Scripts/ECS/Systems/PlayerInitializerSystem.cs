@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Source.Scripts.ECS.Systems
 {
-    public class PlayerInitializer : IEcsInitSystem
+    public class PlayerInitializerSystem : IEcsInitSystem
     {
         private EcsWorld _world;
         private Componenter _componenter;
