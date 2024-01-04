@@ -36,6 +36,7 @@ namespace Source.Scripts.ECS.Systems
                 if (monoBehaviour is IPlayer player) InitPlayer(entity, player);
                 if (monoBehaviour is ISideChecker sideChecker) InitSideChecker(entity, sideChecker);
                 if (monoBehaviour is IWeaponable weaponable) InitWeaponable(entity, weaponable);
+                if (monoBehaviour is ILightable lightable) InitLightable(entity, lightable);
             }
         }
         
