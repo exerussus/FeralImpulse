@@ -10,7 +10,6 @@ namespace Source.Scripts.ECS.Components
         public void InitializeValues(IGroundChecker groundChecker)
         {
             Value = groundChecker.GroundChecker;
-            
         }
     }
 }

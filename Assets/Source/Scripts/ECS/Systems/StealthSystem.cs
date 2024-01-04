@@ -24,10 +24,7 @@ namespace Source.Scripts.ECS.Systems
 
         public void Run(IEcsSystems systems)
         {
-            foreach (var entity in _playerFilter);
-            
-
-
+            foreach (var entity in _playerFilter) SetPlayerVisibility(entity);
         }
 
         private void SetPlayerVisibility(int playerEntity)
@@ -64,7 +61,10 @@ namespace Source.Scripts.ECS.Systems
         private VisibilityType GetExposure(int lightEntity)
         {
             ref var lightData = ref _componenter.Add<LightData>(lightEntity);
-
+            var outer = lightData.Light.pointLightOuterRadius;
+            var inner = lightData.Light.pointLightInnerRadius;
+            var intensity = lightData.Light.intensity;
+            
             TempTestCode.Start();
             return 0;
             TempTestCode.End();
