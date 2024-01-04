@@ -6,18 +6,18 @@ namespace Source.Scripts.MonoBehaviours.Abstractions
         ICharacter, IEntityObject, IHealthy, IPhysicalBody, IGroundChecker, 
         ISideChecker, IDisplayable, IAnimable, IWeaponable, IMovable
     {
-        [SerializeField] private int entity;
-        [SerializeField] private float health;
-        [SerializeField] private float moveSpeed;
-        [SerializeField] private float jumpForce;
-        [SerializeField] private Rigidbody2D rigidbodyValue;
-        [SerializeField] private GroundChecker groundChecker;
-        [SerializeField] private SideChecker leftSideChecker;
-        [SerializeField] private SideChecker rightSideChecker;
-        [SerializeField] private SpriteRenderer spriteRenderer;
-        [SerializeField] private Animator animator;
-        [SerializeField] private Collider2D entityCollider;
-        [SerializeField] private WeaponColliderHandler weaponColliderHandler;
+        [SerializeField] protected int entity;
+        [SerializeField] protected float health;
+        [SerializeField] protected float moveSpeed;
+        [SerializeField] protected float jumpForce;
+        [SerializeField] protected Rigidbody2D rigidbodyValue;
+        [SerializeField] protected GroundChecker groundChecker;
+        [SerializeField] protected SideChecker leftSideChecker;
+        [SerializeField] protected SideChecker rightSideChecker;
+        [SerializeField] protected SpriteRenderer spriteRenderer;
+        [SerializeField] protected Animator animator;
+        [SerializeField] protected Collider2D entityCollider;
+        [SerializeField] protected WeaponColliderHandler weaponColliderHandler;
         
         public Animator Animator => animator;
         public SpriteRenderer SpriteRenderer => spriteRenderer;
@@ -34,6 +34,10 @@ namespace Source.Scripts.MonoBehaviours.Abstractions
         public float JumpForce => jumpForce;
 
         public void InitializeEntity(int value) => entity = value;
+        public void OnDead()
+        {
+            
+        }
         
     }
 }
