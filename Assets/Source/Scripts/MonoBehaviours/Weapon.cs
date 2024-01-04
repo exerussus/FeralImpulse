@@ -4,8 +4,10 @@ using UnityEngine;
 
 namespace Source.Scripts.MonoBehaviours
 {
-    public class WeaponCollider : MonoBehaviour
+    public class Weapon : MonoBehaviour
     {
+        [SerializeField] private WeaponType weaponType;
+        [SerializeField] private float damage;
         [SerializeField] private float reloadDelay;
         [SerializeField] private float preparingDelay;
         [SerializeField] private float activatedDelay;
@@ -17,6 +19,9 @@ namespace Source.Scripts.MonoBehaviours
         
         public List<Collider2D> Detected => _detected;
 
+        public WeaponType WeaponType => weaponType;
+
+        public float Damage => damage;
         public float ReloadDelay => reloadDelay;
         public float PreparingDelay => preparingDelay;
         public float ActivatedDelay => activatedDelay;

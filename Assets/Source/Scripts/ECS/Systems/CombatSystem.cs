@@ -24,13 +24,13 @@ namespace Source.Scripts.ECS.Systems
         {
             _world = systems.GetWorld();
             _componenter = systems.GetSharedEcsSystem<Componenter>();
-            _attackUpFilter = _world.Filter<AttackRequest>().Inc<MousePositionUpMark>().Inc<WeaponColliderHandlerData>().Exc<AttackReloadData>().Exc<PreparingWeaponActivatedData>().Exc<WeaponActivatedData>().Exc<AfterKickWeaponData>().End();
-            _attackMiddleFilter = _world.Filter<AttackRequest>().Inc<MousePositionMiddleMark>().Inc<WeaponColliderHandlerData>().Exc<AttackReloadData>().Exc<PreparingWeaponActivatedData>().Exc<WeaponActivatedData>().Exc<AfterKickWeaponData>().End();
-            _attackDownFilter = _world.Filter<AttackRequest>().Inc<MousePositionDownMark>().Inc<WeaponColliderHandlerData>().Exc<AttackReloadData>().Exc<PreparingWeaponActivatedData>().Exc<WeaponActivatedData>().Exc<AfterKickWeaponData>().End();
+            _attackUpFilter = _world.Filter<AttackRequest>().Inc<MousePositionUpMark>().Inc<WeaponHandlerData>().Exc<AttackReloadData>().Exc<PreparingWeaponActivatedData>().Exc<WeaponActivatedData>().Exc<AfterKickWeaponData>().End();
+            _attackMiddleFilter = _world.Filter<AttackRequest>().Inc<MousePositionMiddleMark>().Inc<WeaponHandlerData>().Exc<AttackReloadData>().Exc<PreparingWeaponActivatedData>().Exc<WeaponActivatedData>().Exc<AfterKickWeaponData>().End();
+            _attackDownFilter = _world.Filter<AttackRequest>().Inc<MousePositionDownMark>().Inc<WeaponHandlerData>().Exc<AttackReloadData>().Exc<PreparingWeaponActivatedData>().Exc<WeaponActivatedData>().Exc<AfterKickWeaponData>().End();
             _reloadFilter = _world.Filter<AttackReloadData>().End();
-            _weaponActivateFilter = _world.Filter<WeaponActivatedData>().Inc<WeaponColliderHandlerData>().End();
-            _weaponPreparingFilter = _world.Filter<PreparingWeaponActivatedData>().Inc<WeaponColliderHandlerData>().End();
-            _weaponAfterKickFilter = _world.Filter<AfterKickWeaponData>().Inc<WeaponColliderHandlerData>().End();
+            _weaponActivateFilter = _world.Filter<WeaponActivatedData>().Inc<WeaponHandlerData>().End();
+            _weaponPreparingFilter = _world.Filter<PreparingWeaponActivatedData>().Inc<WeaponHandlerData>().End();
+            _weaponAfterKickFilter = _world.Filter<AfterKickWeaponData>().Inc<WeaponHandlerData>().End();
         }
 
         public void Run(IEcsSystems systems)
@@ -57,7 +57,7 @@ namespace Source.Scripts.ECS.Systems
             prepareWeaponActivatedData.TimeRemaining -= Time.fixedDeltaTime;
             if (prepareWeaponActivatedData.TimeRemaining <= 0)
             {
-                ref var weaponHandlerData = ref _componenter.Add<WeaponColliderHandlerData>(entity);
+                ref var weaponHandlerData = ref _componenter.Add<WeaponHandlerData>(entity);
                 ref var weaponActivatedData = ref _componenter.AddOrGet<WeaponActivatedData>(entity);
                 weaponActivatedData.TimeRemaining = weaponHandlerData.Value.CurrentWeapon.ActivatedDelay;
                 weaponHandlerData.Value.Activate();
@@ -74,7 +74,7 @@ namespace Source.Scripts.ECS.Systems
 
         private float GetReloadTime(int entity)
         {
-            ref var weaponHandlerData = ref _componenter.Get<WeaponColliderHandlerData>(entity);
+            ref var weaponHandlerData = ref _componenter.Get<WeaponHandlerData>(entity);
             return weaponHandlerData.Value.CurrentWeapon.ReloadDelay;
         }
         
@@ -82,7 +82,7 @@ namespace Source.Scripts.ECS.Systems
         {
             _componenter.Del<AttackRequest>(entity);
             _componenter.Add<AnimationAttackUpRequest>(entity);
-            PrepareAttack(entity, WeaponColliderType.Up);
+            PrepareAttack(entity, WeaponType.Up);
             AddAttackReload(entity);
 
         }
@@ -91,7 +91,7 @@ namespace Source.Scripts.ECS.Systems
         {
             _componenter.Del<AttackRequest>(entity);
             _componenter.Add<AnimationAttackMiddleRequest>(entity);
-            PrepareAttack(entity, WeaponColliderType.Middle);
+            PrepareAttack(entity, WeaponType.Middle);
             AddAttackReload(entity);
         }
 
@@ -99,13 +99,13 @@ namespace Source.Scripts.ECS.Systems
         {
             _componenter.Del<AttackRequest>(entity);
             _componenter.Add<AnimationAttackDownRequest>(entity);
-            PrepareAttack(entity, WeaponColliderType.Down);
+            PrepareAttack(entity, WeaponType.Down);
             AddAttackReload(entity);
         }
 
-        private void PrepareAttack(int entity, WeaponColliderType weaponType)
+        private void PrepareAttack(int entity, WeaponType weaponType)
         {
-            ref var weaponHandlerData = ref _componenter.Add<WeaponColliderHandlerData>(entity);
+            ref var weaponHandlerData = ref _componenter.Add<WeaponHandlerData>(entity);
             weaponHandlerData.Value.Prepare(weaponType);
             
             ref var prepareWeaponActivatedData = ref _componenter.Add<PreparingWeaponActivatedData>(entity);
@@ -124,7 +124,7 @@ namespace Source.Scripts.ECS.Systems
             weaponActivatedData.TimeRemaining -= Time.fixedDeltaTime;
             if (weaponActivatedData.TimeRemaining <= 0)
             {
-                ref var weaponHandlerData = ref _componenter.Add<WeaponColliderHandlerData>(entity);
+                ref var weaponHandlerData = ref _componenter.Add<WeaponHandlerData>(entity);
                 weaponHandlerData.Value.Deactivate();
                 ref var afterKickWeaponData = ref _componenter.Add<AfterKickWeaponData>(entity);
                 afterKickWeaponData.TimeRemaining = weaponHandlerData.Value.CurrentWeapon.AfterKickDelay;

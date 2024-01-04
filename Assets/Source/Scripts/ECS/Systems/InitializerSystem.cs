@@ -84,7 +84,7 @@ namespace Source.Scripts.ECS.Systems
         public void InitHealth(int entity, IHealthy healthy)
         {
             ref var healthData = ref _componenter.Add<HealthData>(entity);
-            healthData.InitializeValues(healthy.Health);
+            healthData.InitializeValues(healthy);
         }
         
         public void InitMovable(int entity, IMovable movable)
@@ -123,8 +123,8 @@ namespace Source.Scripts.ECS.Systems
         
         public void InitWeaponable(int entity, IWeaponable weaponable)
         {
-            ref var weaponColliderHandler = ref _componenter.Add<WeaponColliderHandlerData>(entity);
-            weaponColliderHandler.Value = weaponable.WeaponColliderHandler;
+            ref var weaponColliderHandler = ref _componenter.Add<WeaponHandlerData>(entity);
+            weaponColliderHandler.Value = weaponable.WeaponHandler;
         }
     }
 }

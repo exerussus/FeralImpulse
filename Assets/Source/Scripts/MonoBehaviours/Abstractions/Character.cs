@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Source.Scripts.MonoBehaviours.Abstractions
 {
@@ -17,7 +18,7 @@ namespace Source.Scripts.MonoBehaviours.Abstractions
         [SerializeField] protected SpriteRenderer spriteRenderer;
         [SerializeField] protected Animator animator;
         [SerializeField] protected Collider2D entityCollider;
-        [SerializeField] protected WeaponColliderHandler weaponColliderHandler;
+        [FormerlySerializedAs("weaponColliderHandler")] [SerializeField] protected WeaponHandler weaponHandler;
         
         public Animator Animator => animator;
         public SpriteRenderer SpriteRenderer => spriteRenderer;
@@ -26,7 +27,7 @@ namespace Source.Scripts.MonoBehaviours.Abstractions
         public SideChecker LeftSideChecker => leftSideChecker;
         public SideChecker RightSideChecker => rightSideChecker;
         public Transform Transform => rigidbodyValue.transform;
-        public WeaponColliderHandler WeaponColliderHandler => weaponColliderHandler;
+        public WeaponHandler WeaponHandler => weaponHandler;
         public Collider2D Collider => entityCollider;
         public int Entity => entity;
         public float Health => health;
@@ -34,10 +35,8 @@ namespace Source.Scripts.MonoBehaviours.Abstractions
         public float JumpForce => jumpForce;
 
         public void InitializeEntity(int value) => entity = value;
-        public void OnDead()
-        {
-            
-        }
-        
+        public abstract void OnDead();
+        public abstract void OnHit();
+
     }
 }

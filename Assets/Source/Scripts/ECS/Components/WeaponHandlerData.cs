@@ -2,8 +2,8 @@
 
 namespace Source.Scripts.ECS.Components
 {
-    public struct WeaponColliderHandlerData
+    public struct WeaponHandlerData
     {
-        public WeaponColliderHandler Value;
+        public WeaponHandler Value;
     }
 }

@@ -5,5 +5,6 @@
         public float Health { get; }
         
         public void OnDead();
+        public void OnHit();
     }
 }

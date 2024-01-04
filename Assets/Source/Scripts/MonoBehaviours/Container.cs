@@ -6,5 +6,9 @@
         {
             animator.SetBool("IsOpened", true);
         }
+        public override void OnHit()
+        {
+            
+        }
     }
 }

@@ -20,5 +20,6 @@ namespace Source.Scripts.MonoBehaviours
         public void InitializeEntity(int value) => entity = value;
 
         public abstract void OnDead();
+        public abstract void OnHit();
     }
 }

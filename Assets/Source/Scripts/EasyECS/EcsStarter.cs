@@ -23,6 +23,7 @@ namespace Source.EasyECS
             fixedUpdateSystems.Add(new CharacterAnimationSystem());
             fixedUpdateSystems.Add(new CombatSystem());
             fixedUpdateSystems.Add(new EntityCollidersSystem());
+            fixedUpdateSystems.Add(new HealthSystem());
             
         }
 
