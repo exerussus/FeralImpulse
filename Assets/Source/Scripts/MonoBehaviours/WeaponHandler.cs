@@ -3,30 +3,34 @@ using UnityEngine;
 
 namespace Source.Scripts.MonoBehaviours
 {
-    public class WeaponColliderHandler : MonoBehaviour
+    public class WeaponHandler : MonoBehaviour
     {
-        [SerializeField] private WeaponCollider upWeapon;
-        [SerializeField] private WeaponCollider middleWeapon;
-        [SerializeField] private WeaponCollider downWeapon;
+        [SerializeField] private Weapon upWeapon;
+        [SerializeField] private Weapon middleWeapon;
+        [SerializeField] private Weapon downWeapon;
 
-        public WeaponCollider CurrentWeapon { get; private set; }
+        public Weapon CurrentWeapon { get; private set; }
 
-        public void Activate(WeaponColliderType weaponType)
+        public void Prepare(WeaponType weaponType)
         {
             switch (weaponType)
             {
-                case WeaponColliderType.Up:
+                case WeaponType.Up:
                     CurrentWeapon = upWeapon;
                     break;
-                case WeaponColliderType.Middle:
+                case WeaponType.Middle:
                     CurrentWeapon = middleWeapon;
                     break;
-                case WeaponColliderType.Down:
+                case WeaponType.Down:
                     CurrentWeapon = downWeapon;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(weaponType), weaponType, null);
             }
+        }
+        
+        public void Activate()
+        {
             CurrentWeapon.Activate();
         }
 
@@ -37,7 +41,7 @@ namespace Source.Scripts.MonoBehaviours
 
     }
 
-    public enum WeaponColliderType
+    public enum WeaponType
     {
         Up,
         Middle,

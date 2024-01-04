@@ -1,5 +1,4 @@
 ﻿using Source.EasyECS;
-using Source.ECS.Components;
 using Source.ECS.Marks;
 using Source.Scripts.ECS.Components;
 using Source.Scripts.ECS.Marks;
@@ -27,7 +26,7 @@ namespace Source.Scripts.ECS.Systems
             _enemyRightFilter = _world.Filter<RightMovingMark>().Inc<FlipableMark>().Inc<TransformData>().Inc<EnemyMark>().End();
             _enemyLeftSideJumpFilter = _world.Filter<FlipJumpLeftRequest>().Inc<FlipableMark>().Inc<TransformData>().Inc<EnemyMark>().End();
             _enemyRightSideJumpFilter = _world.Filter<FlipJumpRightRequest>().Inc<FlipableMark>().Inc<TransformData>().Inc<EnemyMark>().End();
-            _playerFilter = _world.Filter<PlayerMark>().Inc<FlipableMark>().Inc<TransformData>().End();
+            _playerFilter = _world.Filter<PlayerMark>().Inc<FlipableMark>().Inc<TransformData>().Exc<WeaponActivatedData>().Exc<PreparingWeaponActivatedData>().Exc<AfterKickWeaponData>().End();
         }
 
         public void Run(IEcsSystems systems)

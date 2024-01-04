@@ -1,9 +1,14 @@
-﻿namespace Source.Scripts.ECS.Components
+﻿using Source.Scripts.MonoBehaviours.Abstractions;
+
+namespace Source.Scripts.ECS.Components
 {
     public struct HealthData
     {
+        
         private float _maxValue;
         private float _currentValue;
+        
+        public IHealthy Healthy { get; private set; }
         
         public float MaxValue
         {
@@ -18,13 +23,19 @@
         public float CurrentValue
         {
             get => _currentValue;
-            set => _currentValue = value > _maxValue ? _maxValue : value;
+            set
+            {
+                var rawValue = value > _maxValue ? _maxValue : value;
+                _currentValue = rawValue > 0 ? rawValue : 0;
+            }
         }
 
-        public void InitializeValues(float value)
+        public void InitializeValues(IHealthy healthy)
         {
-            _maxValue = value;
-            _currentValue = value;
+            _maxValue = healthy.Health;
+            _currentValue = healthy.Health;
+            Healthy = healthy;
         }
+        
     }
 }

@@ -1,7 +1,7 @@
 ﻿namespace Source.Scripts.ECS.Components
 {
-    // содержит оставшееся время до перезарядки 
-    public struct AttackReloadData
+    // Отмашка после удара
+    public struct AfterKickWeaponData
     {
         public float TimeRemaining;
 
@@ -9,5 +9,6 @@
         {
             TimeRemaining = value;
         }
+        
     }
 }

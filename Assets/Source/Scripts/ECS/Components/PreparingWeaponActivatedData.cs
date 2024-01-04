@@ -1,10 +1,11 @@
 ﻿
-using Source.Scripts.MonoBehaviours.Abstractions;
+
+using UnityEngine.Rendering;
 
 namespace Source.Scripts.ECS.Components
 {
-    // оружее активно и ловит коллайдер противника
-    public struct WeaponActivatedData
+    // Время перед активацией коллайдера оружия
+    public struct PreparingWeaponActivatedData
     {
         public float TimeRemaining;
 
@@ -12,5 +13,7 @@ namespace Source.Scripts.ECS.Components
         {
             TimeRemaining = value;
         }
+        
+        
     }
 }

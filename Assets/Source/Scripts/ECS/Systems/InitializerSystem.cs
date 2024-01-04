@@ -1,5 +1,4 @@
 ﻿using Source.EasyECS;
-using Source.ECS.Components;
 using Source.ECS.Marks;
 using Source.Scripts.ECS.Components;
 using Source.Scripts.ECS.Marks;
@@ -13,7 +12,6 @@ namespace Source.Scripts.ECS.Systems
         private EcsWorld _world;
         private Componenter _componenter;
         private EntityObjectHandler _entityObjectHandler;
-        
         
         public void Init(IEcsSystems systems)
         {
@@ -37,7 +35,6 @@ namespace Source.Scripts.ECS.Systems
                 if (monoBehaviour is IPhysicalBody physicalBody) InitPhysicalBody(entity, physicalBody);
                 if (monoBehaviour is IPlayer player) InitPlayer(entity, player);
                 if (monoBehaviour is ISideChecker sideChecker) InitSideChecker(entity, sideChecker);
-                if (monoBehaviour is ITouchable touchable) InitTouchable(entity, touchable);
                 if (monoBehaviour is IWeaponable weaponable) InitWeaponable(entity, weaponable);
             }
         }
@@ -45,13 +42,13 @@ namespace Source.Scripts.ECS.Systems
         public void InitAnimable(int entity, IAnimable animable)
         {
             ref var animatorData = ref _componenter.Add<AnimatorData>(entity);
-            animatorData.Value = animable.Animator;
+            animatorData.InitializeValues(animable);
         }
         
         public void InitCharacter(int entity, ICharacter character)
         {
             ref var characterData = ref _componenter.Add<CharacterData>(entity);
-            characterData.Value = character;
+            characterData.InitializeValues(character);
         }
         
         public void InitDestructible(int entity, IDestructible destructible)
@@ -62,7 +59,7 @@ namespace Source.Scripts.ECS.Systems
         public void InitDisplayable(int entity, IDisplayable displayable)
         {
             ref var spriteRenderData = ref _componenter.Add<SpriteRenderData>(entity);
-            spriteRenderData.Value = displayable.SpriteRenderer;
+            spriteRenderData.InitializeValues(displayable);
         }
         
         public void InitEnemy(int entity, IEnemy enemy)
@@ -73,29 +70,28 @@ namespace Source.Scripts.ECS.Systems
         public void InitEntityObject(int entity, IEntityObject entityObject)
         {
             ref var entityObjectData = ref _componenter.Add<EntityObjectData>(entity);
-            entityObjectData.Value = entityObject;
-            entityObjectData.Value.InitializeEntity(entity);
+            entityObjectData.InitializeValues(entity, entityObject);
         }
         
         public void InitGroundChecker(int entity, IGroundChecker groundChecker)
         {
             ref var groundCheckData = ref _componenter.Add<GroundCheckerData>(entity);
-            groundCheckData.Value = groundChecker.GroundChecker;
+            groundCheckData.InitializeValues(groundChecker);
         }
         
         public void InitHealth(int entity, IHealthy healthy)
         {
             ref var healthData = ref _componenter.Add<HealthData>(entity);
-            healthData.InitializeValues(healthy.Health);
+            healthData.InitializeValues(healthy);
         }
         
         public void InitMovable(int entity, IMovable movable)
         {
             ref var moveSpeedData = ref _componenter.Add<MoveSpeedData>(entity);
-            moveSpeedData.Value = movable.MoveSpeed;
+            moveSpeedData.InitializeValues(movable);
             
             ref var jumpForceData = ref _componenter.Add<JumpForceData>(entity);
-            jumpForceData.Value = movable.JumpForce;
+            jumpForceData.InitializeValues(movable);
             
             _componenter.Add<FlipableMark>(entity);
         }
@@ -103,10 +99,10 @@ namespace Source.Scripts.ECS.Systems
         public void InitPhysicalBody(int entity, IPhysicalBody physicalBody)
         {
             ref var rigidbodyData = ref _componenter.Add<RigidbodyData>(entity);
-            rigidbodyData.Value = physicalBody.Rigidbody;
+            rigidbodyData.InitializeValues(physicalBody);
             
             ref var transformData = ref _componenter.Add<TransformData>(entity);
-            transformData.Value = physicalBody.Transform;
+            transformData.InitializeValues(physicalBody);
         }
         
         public void InitPlayer(int entity, IPlayer player)
@@ -117,21 +113,21 @@ namespace Source.Scripts.ECS.Systems
         public void InitSideChecker(int entity, ISideChecker sideChecker)
         {
             ref var leftSideTouchData = ref _componenter.Add<LeftSideCheckerData>(entity);
-            leftSideTouchData.Value = sideChecker.LeftSideChecker;
+            leftSideTouchData.InitializeValues(sideChecker);
             ref var rightSideTouchData = ref _componenter.Add<RightSideCheckerData>(entity);
-            rightSideTouchData.Value = sideChecker.RightSideChecker;
-
-        }
-        
-        public void InitTouchable(int entity, ITouchable touchable)
-        {
-            
+            rightSideTouchData.InitializeValues(sideChecker);
         }
         
         public void InitWeaponable(int entity, IWeaponable weaponable)
         {
-            ref var weaponColliderHandler = ref _componenter.Add<WeaponColliderHandlerData>(entity);
-            weaponColliderHandler.Value = weaponable.WeaponColliderHandler;
+            ref var weaponColliderHandler = ref _componenter.Add<WeaponHandlerData>(entity);
+            weaponColliderHandler.InitializeValues(weaponable);
+        }
+
+        public void InitLightable(int entity, ILightable lightable)
+        {
+            ref var lightData = ref _componenter.Add<LightData>(entity);
+            lightData.InitializeValues(lightable);
         }
     }
 }

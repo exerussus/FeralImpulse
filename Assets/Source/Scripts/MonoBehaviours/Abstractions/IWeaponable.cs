@@ -2,6 +2,7 @@
 {
     public interface IWeaponable
     {
-        public WeaponColliderHandler WeaponColliderHandler { get; }
+        public WeaponHandler WeaponHandler { get; }
+        
     }
 }

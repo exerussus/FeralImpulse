@@ -4,15 +4,29 @@ using UnityEngine;
 
 namespace Source.Scripts.MonoBehaviours
 {
-    public class WeaponCollider : MonoBehaviour
+    public class Weapon : MonoBehaviour
     {
+        [SerializeField] private WeaponType weaponType;
+        [SerializeField] private float damage;
+        [SerializeField] private float reloadDelay;
+        [SerializeField] private float preparingDelay;
+        [SerializeField] private float activatedDelay;
+        [SerializeField] private float afterKickDelay;
         [SerializeField] private Collider2D weaponArea;
         [SerializeField] private Collider2D originCharacter;
         private List<Collider2D> _detected = new List<Collider2D>();
         private List<Collider2D> _ignore = new List<Collider2D>();
         
-        
         public List<Collider2D> Detected => _detected;
+
+        public WeaponType WeaponType => weaponType;
+
+        public float Damage => damage;
+        public float ReloadDelay => reloadDelay;
+        public float PreparingDelay => preparingDelay;
+        public float ActivatedDelay => activatedDelay;
+
+        public float AfterKickDelay => afterKickDelay;
 
         public void Activate()
         {
