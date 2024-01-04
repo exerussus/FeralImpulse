@@ -59,7 +59,8 @@ namespace Source.Scripts.ECS.Systems
             {
                 ref var weaponHandlerData = ref _componenter.Add<WeaponHandlerData>(entity);
                 ref var weaponActivatedData = ref _componenter.AddOrGet<WeaponActivatedData>(entity);
-                weaponActivatedData.TimeRemaining = weaponHandlerData.Value.CurrentWeapon.ActivatedDelay;
+                weaponActivatedData.InitializeValues(weaponHandlerData.Value.CurrentWeapon.ActivatedDelay);
+                
                 weaponHandlerData.Value.Activate();
                 _componenter.Del<PreparingWeaponActivatedData>(entity);
             }
@@ -69,7 +70,7 @@ namespace Source.Scripts.ECS.Systems
         {
             var timeRemaining = GetReloadTime(entity);
             ref var attackReloadData = ref _componenter.AddOrGet<AttackReloadData>(entity);
-            attackReloadData.TimeRemaining = timeRemaining;
+            attackReloadData.InitializeValues(timeRemaining);
         }
 
         private float GetReloadTime(int entity)
@@ -105,11 +106,11 @@ namespace Source.Scripts.ECS.Systems
 
         private void PrepareAttack(int entity, WeaponType weaponType)
         {
-            ref var weaponHandlerData = ref _componenter.Add<WeaponHandlerData>(entity);
+            ref var weaponHandlerData = ref _componenter.Get<WeaponHandlerData>(entity);
             weaponHandlerData.Value.Prepare(weaponType);
             
             ref var prepareWeaponActivatedData = ref _componenter.Add<PreparingWeaponActivatedData>(entity);
-            prepareWeaponActivatedData.TimeRemaining = weaponHandlerData.Value.CurrentWeapon.PreparingDelay;
+            prepareWeaponActivatedData.InitializeValues(weaponHandlerData.Value.CurrentWeapon.PreparingDelay);
         }
         
         private void Reload(int entity)
@@ -124,10 +125,10 @@ namespace Source.Scripts.ECS.Systems
             weaponActivatedData.TimeRemaining -= Time.fixedDeltaTime;
             if (weaponActivatedData.TimeRemaining <= 0)
             {
-                ref var weaponHandlerData = ref _componenter.Add<WeaponHandlerData>(entity);
+                ref var weaponHandlerData = ref _componenter.Get<WeaponHandlerData>(entity);
                 weaponHandlerData.Value.Deactivate();
                 ref var afterKickWeaponData = ref _componenter.Add<AfterKickWeaponData>(entity);
-                afterKickWeaponData.TimeRemaining = weaponHandlerData.Value.CurrentWeapon.AfterKickDelay;
+                afterKickWeaponData.InitializeValues(weaponHandlerData.Value.CurrentWeapon.AfterKickDelay);
                 _componenter.Del<WeaponActivatedData>(entity);
             }
         }

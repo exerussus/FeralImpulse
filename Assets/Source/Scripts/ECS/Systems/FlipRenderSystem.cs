@@ -1,5 +1,4 @@
 ﻿using Source.EasyECS;
-using Source.ECS.Components;
 using Source.ECS.Marks;
 using Source.Scripts.ECS.Components;
 using Source.Scripts.ECS.Marks;

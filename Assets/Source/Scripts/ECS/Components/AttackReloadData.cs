@@ -4,5 +4,10 @@
     public struct AttackReloadData
     {
         public float TimeRemaining;
+
+        public void InitializeValues(float value)
+        {
+            TimeRemaining = value;
+        }
     }
 }

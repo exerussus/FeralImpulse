@@ -4,5 +4,11 @@
     public struct AfterKickWeaponData
     {
         public float TimeRemaining;
+
+        public void InitializeValues(float value)
+        {
+            TimeRemaining = value;
+        }
+        
     }
 }

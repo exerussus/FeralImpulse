@@ -1,10 +1,16 @@
-﻿using Source.MonoBehaviours;
-using Source.Scripts.MonoBehaviours;
+﻿using Source.Scripts.MonoBehaviours;
+using Source.Scripts.MonoBehaviours.Abstractions;
 
-namespace Source.ECS.Components
+namespace Source.Scripts.ECS.Components
 {
     public struct GroundCheckerData
     {
         public GroundChecker Value;
+
+        public void InitializeValues(IGroundChecker groundChecker)
+        {
+            Value = groundChecker.GroundChecker;
+            
+        }
     }
 }
