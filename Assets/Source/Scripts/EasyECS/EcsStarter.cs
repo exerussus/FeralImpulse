@@ -24,6 +24,8 @@ namespace Source.EasyECS
             fixedUpdateSystems.Add(new CombatSystem());
             fixedUpdateSystems.Add(new EntityCollidersSystem());
             fixedUpdateSystems.Add(new HealthSystem());
+            fixedUpdateSystems.Add(new StealthSystem());
+            
             
         }
 

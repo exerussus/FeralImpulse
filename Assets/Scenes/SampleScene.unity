@@ -5997,7 +5997,7 @@ MonoBehaviour:
   weaponType: 0
   damage: 2
   reloadDelay: 1
-  preparingDelay: 0.2
+  preparingDelay: 0.4
   activatedDelay: 0.4
   afterKickDelay: 0.2
   weaponArea: {fileID: 497524592}
@@ -11256,7 +11256,7 @@ MonoBehaviour:
   weaponType: 2
   damage: 2
   reloadDelay: 1
-  preparingDelay: 0.2
+  preparingDelay: 0.4
   activatedDelay: 0.4
   afterKickDelay: 0.2
   weaponArea: {fileID: 752025628}
@@ -16776,7 +16776,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   entity: 0
-  health: 6
+  health: 50
   spriteRenderer: {fileID: 1083943302}
   animator: {fileID: 0}
   entityCollider: {fileID: 1083943301}
@@ -23438,7 +23438,7 @@ MonoBehaviour:
   weaponType: 1
   damage: 1
   reloadDelay: 1
-  preparingDelay: 0.1
+  preparingDelay: 0.15
   activatedDelay: 0.3
   afterKickDelay: 0.2
   weaponArea: {fileID: 1397173184}

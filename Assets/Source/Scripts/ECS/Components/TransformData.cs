@@ -7,9 +7,9 @@ namespace Source.Scripts.ECS.Components
     {
         public Transform Value;
 
-        public void InitializeValues(IPhysicalBody physicalBody)
+        public void InitializeValues(IEntityObject entityObject)
         {
-            Value = physicalBody.Transform;
+            Value = entityObject.Transform;
         }
     }
 }

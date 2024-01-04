@@ -3,7 +3,8 @@ using UnityEngine;
 
 namespace Source.Scripts.MonoBehaviours
 {
-    public abstract class Destructible : MonoBehaviour, IEntityObject, IDestructible, IDisplayable, IAnimable, IHealthy
+    public abstract class Destructible : MonoBehaviour, IEntityObject, IDestructible, IDisplayable, IAnimable,
+        IHealthy
     {
         [SerializeField] protected int entity;
         [SerializeField] protected float health;
@@ -14,6 +15,7 @@ namespace Source.Scripts.MonoBehaviours
         public Animator Animator => animator;
         public SpriteRenderer SpriteRenderer => spriteRenderer;
         public Collider2D Collider => entityCollider;
+        public Transform Transform => transform;
         public int Entity => entity;
         public float Health => health;
         
@@ -21,5 +23,6 @@ namespace Source.Scripts.MonoBehaviours
 
         public abstract void OnDead();
         public abstract void OnHit();
+        
     }
 }
