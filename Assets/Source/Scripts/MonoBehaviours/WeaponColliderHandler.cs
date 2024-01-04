@@ -11,7 +11,7 @@ namespace Source.Scripts.MonoBehaviours
 
         public WeaponCollider CurrentWeapon { get; private set; }
 
-        public void Activate(WeaponColliderType weaponType)
+        public void Prepare(WeaponColliderType weaponType)
         {
             switch (weaponType)
             {
@@ -27,6 +27,10 @@ namespace Source.Scripts.MonoBehaviours
                 default:
                     throw new ArgumentOutOfRangeException(nameof(weaponType), weaponType, null);
             }
+        }
+        
+        public void Activate()
+        {
             CurrentWeapon.Activate();
         }
 

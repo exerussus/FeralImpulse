@@ -377,7 +377,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entity: 0
   health: 30
-  moveSpeed: 9
+  moveSpeed: 500
   jumpForce: 5
   rigidbodyValue: {fileID: 438082013}
   groundChecker: {fileID: 2087477194}
@@ -562,6 +562,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56b9fbfe24c345408aaca5552f2f729e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  reloadDelay: 1
+  preparingDelay: 0.2
+  activatedDelay: 0.4
+  afterKickDelay: 0.2
   weaponArea: {fileID: 497524592}
   originCharacter: {fileID: 438082017}
 --- !u!1 &519420028
@@ -966,6 +970,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56b9fbfe24c345408aaca5552f2f729e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  reloadDelay: 1
+  preparingDelay: 0.2
+  activatedDelay: 0.4
+  afterKickDelay: 0.2
   weaponArea: {fileID: 752025628}
   originCharacter: {fileID: 438082017}
 --- !u!68 &752025628
@@ -2363,6 +2371,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56b9fbfe24c345408aaca5552f2f729e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  reloadDelay: 1
+  preparingDelay: 0.1
+  activatedDelay: 0.3
+  afterKickDelay: 0.2
   weaponArea: {fileID: 1397173184}
   originCharacter: {fileID: 438082017}
 --- !u!1 &1663263127

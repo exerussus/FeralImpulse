@@ -20,7 +20,9 @@ namespace Source.Scripts.ECS.Systems
         private EcsFilter _jumpBothSideFilter;
         private EcsFilter _jumpLeftSideFilter;
         private EcsFilter _jumpRightSideFilter;
-        
+
+        private const float SlowdownMultiply = 0.2f;
+        private const float SpeedMultiply = 0.01f;
         private const float SideJumpMultiply = 1f;
         private const float UpJumpMultiply = 1.2f;
         private Vector2 VectorUp => Vector2.up * UpJumpMultiply;
@@ -32,8 +34,8 @@ namespace Source.Scripts.ECS.Systems
             _world = systems.GetWorld();
             _systems = systems;
             _componenter = systems.GetSharedEcsSystem<Componenter>();
-            _leftFilter = _world.Filter<LeftMovingMark>().Inc<RigidbodyData>().Inc<MoveSpeedData>().Inc<GroundTouchMark>().Exc<LeftSideTouchMark>().End();
-            _rightFilter = _world.Filter<RightMovingMark>().Inc<RigidbodyData>().Inc<MoveSpeedData>().Inc<GroundTouchMark>().Exc<RightSideTouchMark>().End();
+            _leftFilter = _world.Filter<LeftMovingMark>().Inc<RigidbodyData>().Inc<MoveSpeedData>().Inc<GroundTouchMark>().End();
+            _rightFilter = _world.Filter<RightMovingMark>().Inc<RigidbodyData>().Inc<MoveSpeedData>().Inc<GroundTouchMark>().End();
             _stayFilter = _world.Filter<CharacterData>().Inc<RigidbodyData>().Exc<LeftMovingMark>().Exc<RightMovingMark>().End();
             _jumpSimpleFilter = _world.Filter<JumpForceData>().Inc<RigidbodyData>().Inc<JumpRequest>().Inc<GroundTouchMark>().End();
             _jumpLeftSideFilter = _world.Filter<JumpForceData>().Inc<RigidbodyData>().Inc<JumpRequest>().Inc<LeftSideTouchMark>().Exc<GroundTouchMark>().End();
@@ -50,7 +52,6 @@ namespace Source.Scripts.ECS.Systems
             foreach (var entity in _jumpBothSideFilter) JumpBoth(entity);
             foreach (var entity in _jumpLeftSideFilter) JumpLeftSide(entity);
             foreach (var entity in _jumpRightSideFilter) JumpRightSide(entity);
-            
         }
 
         private int GetFlipMultiply(int entity)
@@ -63,26 +64,32 @@ namespace Source.Scripts.ECS.Systems
         {
             ref var rigidbodyData = ref _componenter.Get<RigidbodyData>(entity);
             ref var moveSpeedData = ref _componenter.Get<MoveSpeedData>(entity);
-            rigidbodyData.Value.velocity +=
-                new Vector2(- moveSpeedData.Value * Time.fixedDeltaTime, 0);
-            _componenter.AddOrGet<AnimationMovingMark>(entity);
 
+            var moveSpeed = moveSpeedData.Value * SpeedMultiply;
+            
+            rigidbodyData.Value.velocity = new Vector2(-moveSpeed, rigidbodyData.Value.velocity.y);
+            _componenter.AddOrGet<AnimationMovingMark>(entity);
         }
+        
         private void MoveRight(int entity)
         {
             ref var rigidbodyData = ref _componenter.Get<RigidbodyData>(entity);
             ref var moveSpeedData = ref _componenter.Get<MoveSpeedData>(entity);
-            rigidbodyData.Value.velocity +=
-                new Vector2( moveSpeedData.Value * Time.fixedDeltaTime, 0);
-            _componenter.AddOrGet<AnimationMovingMark>(entity);
+
+            var moveSpeed = moveSpeedData.Value * SpeedMultiply;
             
+            rigidbodyData.Value.velocity = new Vector2(moveSpeed, rigidbodyData.Value.velocity.y);
+            _componenter.AddOrGet<AnimationMovingMark>(entity);
         }
 
         private void Stay(int entity)
         {
             ref var rigidbodyData = ref _componenter.Get<RigidbodyData>(entity);
             _componenter.Del<AnimationMovingMark>(entity);
+            var velocity = rigidbodyData.Value.velocity;
+            rigidbodyData.Value.velocity = new Vector2(velocity.x * SlowdownMultiply, velocity.y);
         }
+        
         private void JumpSimple(int entity)
         {
             _componenter.Del<JumpRequest>(entity);
@@ -91,6 +98,7 @@ namespace Source.Scripts.ECS.Systems
             rigidbodyData.Value.AddRelativeForce(Vector2.up * jumpForceData.Value, Impulse);
             _componenter.AddOrGet<AnimationJumpRequest>(entity);
         }
+        
         private void JumpBoth(int entity)
         {
             _componenter.Del<JumpRequest>(entity);
@@ -99,6 +107,7 @@ namespace Source.Scripts.ECS.Systems
             rigidbodyData.Value.AddRelativeForce(VectorUp * jumpForceData.Value, Impulse);
             _componenter.AddOrGet<AnimationJumpRequest>(entity);
         }
+        
         private void JumpLeftSide(int entity)
         {
             _componenter.Del<JumpRequest>(entity);
@@ -109,6 +118,7 @@ namespace Source.Scripts.ECS.Systems
             _componenter.AddOrGet<AnimationJumpRequest>(entity);
             _componenter.AddOrGet<FlipJumpLeftRequest>(entity);
         }
+        
         private void JumpRightSide(int entity)
         {
             _componenter.Del<JumpRequest>(entity);

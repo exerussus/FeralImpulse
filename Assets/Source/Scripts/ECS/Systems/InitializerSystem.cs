@@ -14,7 +14,6 @@ namespace Source.Scripts.ECS.Systems
         private Componenter _componenter;
         private EntityObjectHandler _entityObjectHandler;
         
-        
         public void Init(IEcsSystems systems)
         {
             _world = systems.GetWorld();
@@ -37,7 +36,6 @@ namespace Source.Scripts.ECS.Systems
                 if (monoBehaviour is IPhysicalBody physicalBody) InitPhysicalBody(entity, physicalBody);
                 if (monoBehaviour is IPlayer player) InitPlayer(entity, player);
                 if (monoBehaviour is ISideChecker sideChecker) InitSideChecker(entity, sideChecker);
-                if (monoBehaviour is ITouchable touchable) InitTouchable(entity, touchable);
                 if (monoBehaviour is IWeaponable weaponable) InitWeaponable(entity, weaponable);
             }
         }
@@ -121,11 +119,6 @@ namespace Source.Scripts.ECS.Systems
             ref var rightSideTouchData = ref _componenter.Add<RightSideCheckerData>(entity);
             rightSideTouchData.Value = sideChecker.RightSideChecker;
 
-        }
-        
-        public void InitTouchable(int entity, ITouchable touchable)
-        {
-            
         }
         
         public void InitWeaponable(int entity, IWeaponable weaponable)

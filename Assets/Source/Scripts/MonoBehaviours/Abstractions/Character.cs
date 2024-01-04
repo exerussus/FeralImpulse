@@ -4,7 +4,7 @@ namespace Source.Scripts.MonoBehaviours.Abstractions
 {
     public abstract class Character : MonoBehaviour, 
         ICharacter, IEntityObject, IHealthy, IPhysicalBody, IGroundChecker, 
-        ISideChecker, IDisplayable, IAnimable, ITouchable, IWeaponable, IMovable
+        ISideChecker, IDisplayable, IAnimable, IWeaponable, IMovable
     {
         [SerializeField] private int entity;
         [SerializeField] private float health;
