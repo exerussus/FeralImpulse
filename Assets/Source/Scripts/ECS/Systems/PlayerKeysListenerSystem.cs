@@ -1,5 +1,4 @@
 ﻿using Source.EasyECS;
-using Source.ECS.Components;
 using Source.Scripts.ECS.Components;
 using Source.Scripts.ECS.Marks;
 using Source.Scripts.ECS.Requests;
@@ -83,28 +82,25 @@ namespace Source.Scripts.ECS.Systems
 
         private void TryAddMovingDirection(int entity)
         {
-            var axisX = Input.GetAxis("Horizontal");
-            var axisY = Input.GetAxis("Vertical");
+            var pressedLeft = Input.GetKey(KeyCode.A);
+            var pressedRight = Input.GetKey(KeyCode.D);
 
-            if (axisX != 0)
-            {
-                if (axisX > 0)
-                {
-                    _componenter.AddOrGet<RightMovingMark>(entity);
-                    _componenter.Del<LeftMovingMark>(entity);
-                }
-                else
-                {
-                    _componenter.AddOrGet<LeftMovingMark>(entity);
-                    _componenter.Del<RightMovingMark>(entity);
-                }
-                return;
-            }
-            else 
+            if (pressedLeft && pressedRight || !pressedRight && !pressedLeft)
             {
                 _componenter.Del<LeftMovingMark>(entity);
                 _componenter.Del<RightMovingMark>(entity);
+                return;
             }
+
+            if (pressedLeft)
+            {
+                _componenter.AddOrGet<LeftMovingMark>(entity);
+                _componenter.Del<RightMovingMark>(entity);
+                return;
+            }
+
+            _componenter.AddOrGet<RightMovingMark>(entity);
+            _componenter.Del<LeftMovingMark>(entity);
         }
 
         private void TryCreateJumpRequest(int entity)

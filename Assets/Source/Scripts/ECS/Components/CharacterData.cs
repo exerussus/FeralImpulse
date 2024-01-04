@@ -1,11 +1,16 @@
-﻿using Source.MonoBehaviours;
-using Source.Scripts.MonoBehaviours;
+﻿
+using Source.Scripts.MonoBehaviours.Abstractions;
 
-namespace Source.ECS.Components
+namespace Source.Scripts.ECS.Components
 {
     public struct CharacterData
     {
-        public Character Value;
+        public ICharacter Value;
+
+        public void InitializeValues(ICharacter character)
+        {
+            Value = character;
+        }
         
     }
 }

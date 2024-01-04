@@ -1,8 +1,9 @@
 ﻿using Source.EasyECS;
-using Source.ECS.Components;
 using Source.ECS.Marks;
+using Source.Scripts.ECS.Components;
 using Source.Scripts.ECS.Marks;
 using Source.Scripts.ECS.Requests;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace Source.Scripts.ECS.Systems
@@ -21,11 +22,11 @@ namespace Source.Scripts.ECS.Systems
         {
             _world = systems.GetWorld();
             _componenter = systems.GetSharedEcsSystem<Componenter>();
-            _enemyLeftFilter = _world.Filter<LeftMovingMark>().Inc<FlipableMark>().Inc<SpriteRenderData>().Inc<EnemyMark>().End();
-            _enemyRightFilter = _world.Filter<RightMovingMark>().Inc<FlipableMark>().Inc<SpriteRenderData>().Inc<EnemyMark>().End();
-            _enemyLeftSideJumpFilter = _world.Filter<FlipJumpLeftRequest>().Inc<FlipableMark>().Inc<SpriteRenderData>().Inc<EnemyMark>().End();
-            _enemyRightSideJumpFilter = _world.Filter<FlipJumpRightRequest>().Inc<FlipableMark>().Inc<SpriteRenderData>().Inc<EnemyMark>().End();
-            _playerFilter = _world.Filter<PlayerMark>().Inc<FlipableMark>().Inc<SpriteRenderData>().End();
+            _enemyLeftFilter = _world.Filter<LeftMovingMark>().Inc<FlipableMark>().Inc<TransformData>().Inc<EnemyMark>().End();
+            _enemyRightFilter = _world.Filter<RightMovingMark>().Inc<FlipableMark>().Inc<TransformData>().Inc<EnemyMark>().End();
+            _enemyLeftSideJumpFilter = _world.Filter<FlipJumpLeftRequest>().Inc<FlipableMark>().Inc<TransformData>().Inc<EnemyMark>().End();
+            _enemyRightSideJumpFilter = _world.Filter<FlipJumpRightRequest>().Inc<FlipableMark>().Inc<TransformData>().Inc<EnemyMark>().End();
+            _playerFilter = _world.Filter<PlayerMark>().Inc<FlipableMark>().Inc<TransformData>().Exc<WeaponActivatedData>().Exc<PreparingWeaponActivatedData>().Exc<AfterKickWeaponData>().End();
         }
 
         public void Run(IEcsSystems systems)
@@ -37,37 +38,51 @@ namespace Source.Scripts.ECS.Systems
             foreach (var entity in _playerFilter) PlayerFlip(entity);
         }
 
+        private void SetFlip(int entity, bool value)
+        {
+            ref var transformData = ref _componenter.Get<TransformData>(entity);
+            var ls = transformData.Value.localScale;
+            var rawScale = Mathf.Abs(ls.x);
+            var scale = value ? -rawScale : rawScale;
+            transformData.Value.localScale = new Vector3(scale, ls.y, ls.z);
+        }
+
+        private bool GetIsFlip(int entity)
+        {
+            ref var transformData = ref _componenter.Get<TransformData>(entity);
+            return transformData.Value.localScale.x < 0;
+        }
+        
         private void PlayerFlip(int entity)
         {
-            ref var spriteRenderData = ref _componenter.Get<SpriteRenderData>(entity);
             var mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            spriteRenderData.Value.flipX = mousePosition.x < spriteRenderData.Value.transform.position.x;
-
+            ref var transformData = ref _componenter.Get<TransformData>(entity);
+            SetFlip(entity, mousePosition.x < transformData.Value.transform.position.x);
         }
 
         private void LeftSideJump(int entity)
         {
             _componenter.Del<FlipJumpLeftRequest>(entity);
-            ref var spriteRenderData = ref _componenter.Get<SpriteRenderData>(entity);
-            spriteRenderData.Value.flipX = false;
+            ref var transformData = ref _componenter.Get<TransformData>(entity);
+            SetFlip(entity, false);
         }
         private void RightSideJump(int entity)
         {
             _componenter.Del<FlipJumpRightRequest>(entity);
-            ref var spriteRenderData = ref _componenter.Get<SpriteRenderData>(entity);
-            spriteRenderData.Value.flipX = true;
+            ref var transformData = ref _componenter.Get<TransformData>(entity);
+            SetFlip(entity, true);
         }
 
         private void RenderRight(int entity)
         {
-            ref var spriteRenderData = ref _componenter.Get<SpriteRenderData>(entity);
-            if (spriteRenderData.Value.flipX) spriteRenderData.Value.flipX = false;
+            ref var transformData = ref _componenter.Get<TransformData>(entity);
+            if (GetIsFlip(entity)) SetFlip(entity, false);
         }
 
         private void RenderLeft(int entity)
         {
-            ref var spriteRenderData = ref _componenter.Get<SpriteRenderData>(entity);
-            if (!spriteRenderData.Value.flipX) spriteRenderData.Value.flipX = true;
+            ref var transformData = ref _componenter.Get<TransformData>(entity);
+            if (!GetIsFlip(entity)) SetFlip(entity, true);
         }
     }
 }
