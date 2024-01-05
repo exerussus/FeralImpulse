@@ -1,9 +1,15 @@
-﻿
+﻿using Source.EasyECS.Interfaces;
 using Source.Scripts.MonoBehaviours.Abstractions;
 
-namespace Source.Scripts.ECS.Components
+namespace Source.Scripts.ECS.Components.Data
 {
-    public struct EntityObjectData
+    /// <summary>
+    /// Хранит IEntityObject.
+    /// </summary>
+    
+    /// /// <param name="IEntityObject">Value</param>
+
+    public struct EntityObjectData : IEcsData<int, IEntityObject>
     {
         public IEntityObject Value;
 

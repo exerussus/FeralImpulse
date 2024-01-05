@@ -1,14 +1,19 @@
-﻿
+﻿using Source.EasyECS.Interfaces;
 using Source.Scripts.MonoBehaviours;
 using Source.Scripts.MonoBehaviours.Abstractions;
 
-namespace Source.Scripts.ECS.Components
+namespace Source.Scripts.ECS.Components.Data
 
 {
-    public struct RightSideCheckerData
+    /// <summary>
+    /// Хранит SideChecker.
+    /// </summary>
+    
+    /// /// <param name="SideChecker">Value</param>
+
+    public struct RightSideCheckerData : IEcsData<ISideChecker>
     {
         public SideChecker Value;
-        
         
         public void InitializeValues(ISideChecker sideChecker)
         {

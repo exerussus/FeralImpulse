@@ -1,7 +1,12 @@
-﻿namespace Source.Scripts.ECS.Marks
+﻿using Source.EasyECS.Interfaces;
+
+namespace Source.Scripts.ECS.Components.Marks
 {
-    // на персонажа падает немного света
-    public struct IlluminateShadedMark
+    /// <summary>
+    /// На персонажа падает немного света.
+    /// </summary>
+
+    public struct IlluminateShadedMark : IEcsMark
     {
         
     }

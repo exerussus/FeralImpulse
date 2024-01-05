@@ -1,6 +1,12 @@
-﻿namespace Source.Scripts.ECS.Marks
+﻿using Source.EasyECS.Interfaces;
+
+namespace Source.Scripts.ECS.Components.Marks
 {
-    public struct RightMovingMark
+    /// <summary>
+    /// Персонажу надо двигаться вправо.
+    /// </summary>
+
+    public struct RightMovingMark : IEcsMark
     {
         
     }

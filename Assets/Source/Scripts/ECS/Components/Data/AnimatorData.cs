@@ -4,6 +4,12 @@ using UnityEngine;
 
 namespace Source.Scripts.ECS.Components.Data
 {
+    /// <summary>
+    /// Хранит Animator.
+    /// </summary>
+    
+    /// /// <param name="Animator">Value</param>
+
     public struct AnimatorData : IEcsData<IAnimable>
     {
         public Animator Value;

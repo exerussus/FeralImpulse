@@ -1,7 +1,12 @@
-﻿namespace Source.Scripts.ECS.Requests.Attack
+﻿using Source.EasyECS.Interfaces;
+
+namespace Source.Scripts.ECS.Components.Requests.Attack
 {
-    // запрос на отображение милли атаки сверху
-    public struct AnimationAttackUpRequest
+    /// <summary>
+    /// Запрос на милли атаку верхнюю.
+    /// </summary>
+
+    public struct AnimationAttackUpRequest : IEcsRequestMark
     {
         
     }

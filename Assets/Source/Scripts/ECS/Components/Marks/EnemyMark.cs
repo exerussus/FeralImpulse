@@ -1,6 +1,12 @@
-﻿namespace Source.ECS.Marks
+﻿using Source.EasyECS.Interfaces;
+
+namespace Source.Scripts.ECS.Components.Marks
 {
-    public struct EnemyMark
+    /// <summary>
+    /// Персонаж является противником.
+    /// </summary>
+
+    public struct EnemyMark : IEcsMark
     {
         
     }

@@ -2,10 +2,10 @@
 using Source.Scripts.Constants;
 using Source.Scripts.ECS.Components;
 using Source.Scripts.ECS.Components.Data;
+using Source.Scripts.ECS.Components.Marks;
+using Source.Scripts.ECS.Components.Requests;
 using Source.Scripts.ECS.Components.Requests.Attack;
-using Source.Scripts.ECS.Marks;
-using Source.Scripts.ECS.Requests;
-using Source.Scripts.ECS.Requests.Attack;
+using Source.Scripts.ECS.Components.Requests.Jump;
 using Source.Scripts.test;
 using UnityEngine;
 

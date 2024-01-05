@@ -1,11 +1,16 @@
-﻿
-using Source.Scripts.MonoBehaviours.Abstractions;
+﻿using Source.EasyECS.Interfaces;
 
-namespace Source.Scripts.ECS.Components
+namespace Source.Scripts.ECS.Components.Data
 {
-    // оружее активно и ловит коллайдер противника
-    public struct WeaponActivatedData
+    /// <summary>
+    /// Оружее активно и ловит коллайдер противника.
+    /// </summary>
+    
+    /// /// <param name="float">TimeRemaining</param>
+
+    public struct WeaponActivatedData : IEcsData<float>
     {
+        /// <summary> Сколько времени осталось. </summary>
         public float TimeRemaining;
 
         public void InitializeValues(float value)

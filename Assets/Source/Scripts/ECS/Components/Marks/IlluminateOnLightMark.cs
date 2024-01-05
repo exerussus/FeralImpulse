@@ -1,7 +1,12 @@
-﻿namespace Source.Scripts.ECS.Marks
+﻿using Source.EasyECS.Interfaces;
+
+namespace Source.Scripts.ECS.Components.Marks
 {
-    // персонаж на свету, полностью виден
-    public struct IlluminateOnLightMark
+    /// <summary>
+    /// Персонаж на свету, полностью виден.
+    /// </summary>
+
+    public struct IlluminateOnLightMark : IEcsMark
     {
         
     }

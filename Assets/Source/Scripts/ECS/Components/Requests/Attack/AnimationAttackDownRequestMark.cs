@@ -3,7 +3,7 @@
 namespace Source.Scripts.ECS.Components.Requests.Attack
 {
     /// <summary>
-    /// Запрос на атаку снизу.
+    /// Запрос на милли атаку снизу.
     /// </summary>
     
     public struct AnimationAttackDownRequestMark : IEcsRequestMark

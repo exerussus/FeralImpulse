@@ -1,9 +1,15 @@
-﻿using Source.Scripts.MonoBehaviours.Abstractions;
+﻿using Source.EasyECS.Interfaces;
+using Source.Scripts.MonoBehaviours.Abstractions;
 
-namespace Source.Scripts.ECS.Components
+namespace Source.Scripts.ECS.Components.Data
 {
-    // сила прыжка
-    public struct JumpForceData
+    /// <summary>
+    /// Cила прыжка.
+    /// </summary>
+    
+    /// /// <param name="float">Value</param>
+
+    public struct JumpForceData : IEcsData<IMovable>
     {
         public float Value;
 

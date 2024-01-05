@@ -1,6 +1,12 @@
-﻿namespace Source.Scripts.ECS.Marks
+﻿using Source.EasyECS.Interfaces;
+
+namespace Source.Scripts.ECS.Components.Marks
 {
-    public struct GroundTouchMark
+    /// <summary>
+    /// Персонаж на земле (касается коллайдером Ground).
+    /// </summary>
+
+    public struct GroundTouchMark : IEcsMark
     {
         
     }

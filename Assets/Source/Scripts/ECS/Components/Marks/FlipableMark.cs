@@ -1,7 +1,12 @@
-﻿namespace Source.Scripts.ECS.Marks
+﻿using Source.EasyECS.Interfaces;
+
+namespace Source.Scripts.ECS.Components.Marks
 {
-    // может ли разворачиваться в рендере
-    public struct FlipableMark
+    /// <summary>
+    /// Может ли разворачиваться.
+    /// </summary>
+
+    public struct FlipableMark : IEcsMark
     {
         
     }

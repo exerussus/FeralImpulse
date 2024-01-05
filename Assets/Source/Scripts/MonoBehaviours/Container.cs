@@ -1,4 +1,6 @@
-﻿namespace Source.Scripts.MonoBehaviours
+﻿using Source.Scripts.MonoBehaviours.Abstractions;
+
+namespace Source.Scripts.MonoBehaviours
 {
     public class Container : Destructible
     {

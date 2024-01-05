@@ -1,6 +1,12 @@
-﻿namespace Source.Scripts.ECS.Marks
+﻿using Source.EasyECS.Interfaces;
+
+namespace Source.Scripts.ECS.Components.Marks
 {
-    public struct PlayerMark
+    /// <summary>
+    /// Персонаж является игроком.
+    /// </summary>
+
+    public struct PlayerMark : IEcsMark
     {
         
     }

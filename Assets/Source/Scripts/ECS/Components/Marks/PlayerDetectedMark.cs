@@ -1,6 +1,12 @@
-﻿namespace Source.ECS.Marks
+﻿using Source.EasyECS.Interfaces;
+
+namespace Source.Scripts.ECS.Components.Marks
 {
-    public class PlayerDetectedMark
+    /// <summary>
+    /// Персонаж видит игрока.
+    /// </summary>
+
+    public class PlayerDetectedMark : IEcsMark
     {
         
     }

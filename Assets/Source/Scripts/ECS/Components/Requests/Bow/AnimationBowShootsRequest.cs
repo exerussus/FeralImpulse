@@ -1,7 +1,12 @@
-﻿namespace Source.Scripts.ECS.Requests.Bow
+﻿using Source.EasyECS.Interfaces;
+
+namespace Source.Scripts.ECS.Components.Requests.Bow
 {
-    // запрос на отображение выстрела лука (не снаряда а лука в руке)
-    public struct AnimationBowShootsRequest
+    /// <summary>
+    /// Запрос на отображение выстрела лука (не снаряда а лука в руке).
+    /// </summary>
+
+    public struct AnimationBowShootsRequest : IEcsRequestMark
     {
         
     }

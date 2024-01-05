@@ -1,7 +1,12 @@
-﻿namespace Source.Scripts.ECS.Marks
+﻿using Source.EasyECS.Interfaces;
+
+namespace Source.Scripts.ECS.Components.Marks
 {
-    // мышь относительно игрока находится внизу
-    public struct MousePositionDownMark
+    /// <summary>
+    /// Мышь относительно игрока находится внизу.
+    /// </summary>
+
+    public struct MousePositionDownMark : IEcsMark
     {
         
     }

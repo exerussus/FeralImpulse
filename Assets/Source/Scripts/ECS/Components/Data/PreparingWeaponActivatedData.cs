@@ -1,19 +1,21 @@
-﻿
+﻿using Source.EasyECS.Interfaces;
 
-using UnityEngine.Rendering;
-
-namespace Source.Scripts.ECS.Components
+namespace Source.Scripts.ECS.Components.Data
 {
-    // Время перед активацией коллайдера оружия
-    public struct PreparingWeaponActivatedData
+    /// <summary>
+    /// Время перед активацией коллайдера оружия.
+    /// </summary>
+    
+    /// /// <param name="float">TimeRemaining</param>
+
+    public struct PreparingWeaponActivatedData : IEcsData<float>
     {
+        /// <summary> Сколько времени осталось. </summary>
         public float TimeRemaining;
 
         public void InitializeValues(float value)
         {
             TimeRemaining = value;
         }
-        
-        
     }
 }

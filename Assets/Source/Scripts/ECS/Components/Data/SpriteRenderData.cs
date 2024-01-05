@@ -1,9 +1,16 @@
-﻿using Source.Scripts.MonoBehaviours.Abstractions;
+﻿using Source.EasyECS.Interfaces;
+using Source.Scripts.MonoBehaviours.Abstractions;
 using UnityEngine;
 
-namespace Source.Scripts.ECS.Components
+namespace Source.Scripts.ECS.Components.Data
 {
-    public struct SpriteRenderData
+    /// <summary>
+    /// Хранит SpriteRenderer.
+    /// </summary>
+    
+    /// /// <param name="SpriteRenderer">Value</param>
+
+    public struct SpriteRenderData : IEcsData<IDisplayable>
     {
         public SpriteRenderer Value;
 

@@ -1,15 +1,24 @@
-﻿using Source.Scripts.MonoBehaviours.Abstractions;
+﻿using Source.EasyECS.Interfaces;
+using Source.Scripts.MonoBehaviours.Abstractions;
 
-namespace Source.Scripts.ECS.Components
+namespace Source.Scripts.ECS.Components.Data
 {
-    public struct HealthData
+    /// <summary>
+    /// Содержит здоровье.
+    /// </summary>
+    
+    /// /// <param name="IHealthy">Healthy</param>
+    /// /// <param name="float">MaxValue</param>
+    /// /// <param name="float">CurrentValue</param>
+
+    public struct HealthData : IEcsData<IHealthy>
     {
-        
         private float _maxValue;
         private float _currentValue;
         
         public IHealthy Healthy { get; private set; }
         
+        /// <summary>Максимальное здоровье.</summary>
         public float MaxValue
         {
             get => _maxValue;
@@ -20,6 +29,7 @@ namespace Source.Scripts.ECS.Components
             }
         }
 
+        /// <summary>Текущее здоровье.</summary>
         public float CurrentValue
         {
             get => _currentValue;
@@ -36,6 +46,5 @@ namespace Source.Scripts.ECS.Components
             _currentValue = healthy.Health;
             Healthy = healthy;
         }
-        
     }
 }

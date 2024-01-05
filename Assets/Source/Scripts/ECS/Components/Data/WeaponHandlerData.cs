@@ -1,9 +1,16 @@
-﻿using Source.Scripts.MonoBehaviours;
+﻿using Source.EasyECS.Interfaces;
+using Source.Scripts.MonoBehaviours;
 using Source.Scripts.MonoBehaviours.Abstractions;
 
-namespace Source.Scripts.ECS.Components
+namespace Source.Scripts.ECS.Components.Data
 {
-    public struct WeaponHandlerData
+    /// <summary>
+    /// Хранит WeaponHandler.
+    /// </summary>
+    
+    /// /// <param name="WeaponHandler">Value</param>
+
+    public struct WeaponHandlerData : IEcsData<IWeaponable>
     {
         public WeaponHandler Value;
 

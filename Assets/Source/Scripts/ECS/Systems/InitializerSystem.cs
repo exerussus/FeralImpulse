@@ -1,8 +1,7 @@
 ﻿using Source.EasyECS;
-using Source.ECS.Marks;
 using Source.Scripts.ECS.Components;
 using Source.Scripts.ECS.Components.Data;
-using Source.Scripts.ECS.Marks;
+using Source.Scripts.ECS.Components.Marks;
 using Source.Scripts.MonoBehaviours;
 using Source.Scripts.MonoBehaviours.Abstractions;
 
@@ -76,6 +75,8 @@ namespace Source.Scripts.ECS.Systems
             
             ref var transformData = ref _componenter.Add<TransformData>(entity);
             transformData.InitializeValues(entityObject);
+            
+            _componenter.Add<DontInitializeColliderMark>(entity);
         }
         
         public void InitGroundChecker(int entity, IGroundChecker groundChecker)

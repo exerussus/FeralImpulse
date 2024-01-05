@@ -1,7 +1,12 @@
-﻿namespace Source.Scripts.ECS.Requests.Bow
+﻿using Source.EasyECS.Interfaces;
+
+namespace Source.Scripts.ECS.Components.Requests.Bow
 {
-    // запрос на отображение натяжения лука
-    public struct AnimationBowRequest
+    /// <summary>
+    /// Запрос на отображение натяжения лука.
+    /// </summary>
+
+    public struct AnimationBowRequest : IEcsRequestMark
     {
         
     }

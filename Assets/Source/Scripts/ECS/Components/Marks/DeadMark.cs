@@ -1,7 +1,12 @@
-﻿namespace Source.Scripts.ECS.Marks
+﻿using Source.EasyECS.Interfaces;
+
+namespace Source.Scripts.ECS.Components.Marks
 {
-    // сущность мертва
-    public struct DeadMark
+    /// <summary>
+    /// Сущность мертва.
+    /// </summary>
+    
+    public struct DeadMark : IEcsMark
     {
         
     }

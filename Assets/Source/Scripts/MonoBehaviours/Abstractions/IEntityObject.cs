@@ -2,6 +2,10 @@
 
 namespace Source.Scripts.MonoBehaviours.Abstractions
 {
+    /// <summary>
+    /// Является сущностью в ECS.
+    /// </summary>
+
     public interface IEntityObject
     {
         public Transform Transform { get; }

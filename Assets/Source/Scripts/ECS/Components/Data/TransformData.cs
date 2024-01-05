@@ -1,9 +1,16 @@
-﻿using Source.Scripts.MonoBehaviours.Abstractions;
+﻿using Source.EasyECS.Interfaces;
+using Source.Scripts.MonoBehaviours.Abstractions;
 using UnityEngine;
 
-namespace Source.Scripts.ECS.Components
+namespace Source.Scripts.ECS.Components.Data
 {
-    public struct TransformData
+    /// <summary>
+    /// Хранит Transform.
+    /// </summary>
+    
+    /// /// <param name="Transform">Value</param>
+
+    public struct TransformData : IEcsData<IEntityObject>
     {
         public Transform Value;
 

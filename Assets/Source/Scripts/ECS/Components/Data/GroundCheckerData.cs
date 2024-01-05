@@ -1,9 +1,16 @@
-﻿using Source.Scripts.MonoBehaviours;
+﻿using Source.EasyECS.Interfaces;
+using Source.Scripts.MonoBehaviours;
 using Source.Scripts.MonoBehaviours.Abstractions;
 
-namespace Source.Scripts.ECS.Components
+namespace Source.Scripts.ECS.Components.Data
 {
-    public struct GroundCheckerData
+    /// <summary>
+    /// Хранит GroundChecker.
+    /// </summary>
+    
+    /// /// <param name="GroundChecker">Value</param>
+
+    public struct GroundCheckerData : IEcsData<IGroundChecker>
     {
         public GroundChecker Value;
 

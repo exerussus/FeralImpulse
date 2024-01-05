@@ -1,6 +1,12 @@
-﻿namespace Source.Scripts.ECS.Marks
+﻿using Source.EasyECS.Interfaces;
+
+namespace Source.Scripts.ECS.Components.Marks
 {
-    public struct LeftMovingMark
+    /// <summary>
+    /// Персонажу надо двигаться влево.
+    /// </summary>
+
+    public struct LeftMovingMark : IEcsMark
     {
         
     }

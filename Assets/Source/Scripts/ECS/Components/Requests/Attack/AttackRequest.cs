@@ -1,7 +1,12 @@
-﻿namespace Source.Scripts.ECS.Requests.Attack
+﻿using Source.EasyECS.Interfaces;
+
+namespace Source.Scripts.ECS.Components.Requests.Attack
 {
-    // запрос на ближнюю атаку
-    public struct AttackRequest
+    /// <summary>
+    /// Запрос на совершение атаки любого типа.
+    /// </summary>
+    
+    public struct AttackRequest : IEcsRequestMark
     {
         
     }

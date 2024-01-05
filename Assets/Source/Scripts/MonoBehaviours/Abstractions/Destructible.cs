@@ -1,8 +1,11 @@
-﻿using Source.Scripts.MonoBehaviours.Abstractions;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace Source.Scripts.MonoBehaviours
+namespace Source.Scripts.MonoBehaviours.Abstractions
 {
+    /// <summary>
+    /// Разрушаемое.
+    /// </summary>
+
     public abstract class Destructible : MonoBehaviour, IEntityObject, IDestructible, IDisplayable, IAnimable,
         IHealthy
     {
