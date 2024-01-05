@@ -1,13 +1,9 @@
 ﻿using Source.EasyECS;
 using Source.Scripts.Constants;
-using Source.Scripts.ECS.Components;
 using Source.Scripts.ECS.Components.Data;
 using Source.Scripts.ECS.Components.Marks;
-using Source.Scripts.ECS.Components.Requests;
 using Source.Scripts.ECS.Components.Requests.Attack;
 using Source.Scripts.ECS.Components.Requests.Jump;
-using Source.Scripts.test;
-using UnityEngine;
 
 namespace Source.Scripts.ECS.Systems
 {
@@ -25,8 +21,11 @@ namespace Source.Scripts.ECS.Systems
         private EcsFilter _attackUppercutFilter;
         private EcsFilter _groundTouchFilter;
         private EcsFilter _groundDontTouchFilter;
+        private EcsFilter _sideLeftTouchFilter;
+        private EcsFilter _sideRightTouchFilter;
+        //private EcsFilter _sideLeftAndRightTouchFilter;
+        //private EcsFilter _sideLeftAndRightDndGroundTouchFilter;
 
-        private int[] AnySideTouchFilter => _filter.GetEntitiesByAnyType<LeftSideTouchMark, RightSideTouchMark>();
         
         public void Init(IEcsSystems systems)
         {
@@ -41,6 +40,10 @@ namespace Source.Scripts.ECS.Systems
             _attackUppercutFilter = _world.Filter<AnimatorData>().Inc<AnimationAttackDownRequestMark>().Inc<CharacterData>().End();
             _groundTouchFilter = _world.Filter<AnimatorData>().Inc<CharacterData>().Inc<GroundTouchMark>().End();
             _groundDontTouchFilter = _world.Filter<AnimatorData>().Inc<CharacterData>().Exc<GroundTouchMark>().End();
+            _sideLeftTouchFilter = _world.Filter<AnimatorData>().Inc<CharacterData>().Inc<LeftSideTouchMark>().End();
+            _sideRightTouchFilter = _world.Filter<AnimatorData>().Inc<CharacterData>().Inc<RightSideTouchMark>().End();
+            //_sideLeftAndRightTouchFilter = _world.Filter<AnimatorData>().Inc<CharacterData>().End();
+            //_sideLeftAndRightDndGroundTouchFilter = _world.Filter<AnimatorData>().Inc<CharacterData>().End();
         }
 
         public void Run(IEcsSystems systems)
@@ -53,10 +56,9 @@ namespace Source.Scripts.ECS.Systems
             foreach (var entity in _attackUppercutFilter) AttackUppercut(entity);
             foreach (var entity in _groundTouchFilter) GroundTouch(entity, true);
             foreach (var entity in _groundDontTouchFilter) GroundTouch(entity, false);
-            foreach (var entity in AnySideTouchFilter)
-            {
-                
-            }
+            foreach (var entity in _sideLeftTouchFilter) SetSideTouch(entity, AnimationStrings.SideLeftTouch,true);
+            foreach (var entity in _sideRightTouchFilter) SetSideTouch(entity, AnimationStrings.SideRightTouch,true);
+
         }
 
         private void GroundTouch(int entity, bool b)
@@ -65,6 +67,15 @@ namespace Source.Scripts.ECS.Systems
             animatorData.Value.SetBool(AnimationStrings.OnGround, b);
         }
 
+        private void SetSideTouch(int entity, string animationParameter, bool b)
+        {
+            ref var animatorData = ref _componenter.Get<AnimatorData>(entity);
+            animatorData.Value.SetBool(animationParameter, b);
+            
+            
+        }
+        
+        
         private void Move(int entity, bool isMoving)
         {
             ref var animatorData = ref _componenter.Get<AnimatorData>(entity);

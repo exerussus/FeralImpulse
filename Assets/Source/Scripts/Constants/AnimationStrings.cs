@@ -8,6 +8,8 @@ namespace Source.Scripts.Constants
         public const string OnGround = "OnGround";
         public const string IsMoving = "IsMoving";
         public const string SideTouch = "SideTouch";
+        public const string SideLeftTouch = "SideLeftTouch";
+        public const string SideRightTouch = "SideRightTouch";
         
         public const string Idle = "Idle";
         public const string IdleCombat = "IdleCombat";
