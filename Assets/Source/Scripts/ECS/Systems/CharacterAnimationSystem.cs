@@ -1,6 +1,8 @@
 ﻿using Source.EasyECS;
 using Source.Scripts.Constants;
 using Source.Scripts.ECS.Components;
+using Source.Scripts.ECS.Components.Data;
+using Source.Scripts.ECS.Components.Requests.Attack;
 using Source.Scripts.ECS.Marks;
 using Source.Scripts.ECS.Requests;
 using Source.Scripts.ECS.Requests.Attack;
@@ -14,6 +16,7 @@ namespace Source.Scripts.ECS.Systems
         private EcsWorld _world;
         private IEcsSystems _systems;
         private Componenter _componenter;
+        private Filter _filter;
         private EcsFilter _idleFilter;
         private EcsFilter _runFilter;
         private EcsFilter _jumpFilter;
@@ -22,10 +25,8 @@ namespace Source.Scripts.ECS.Systems
         private EcsFilter _attackUppercutFilter;
         private EcsFilter _groundTouchFilter;
         private EcsFilter _groundDontTouchFilter;
-        private EcsFilter _sideTouchFilter;
-        
-        
-        
+
+        private int[] AnySideTouchFilter => _filter.GetEntitiesByAnyType<LeftSideTouchMark, RightSideTouchMark>();
         
         public void Init(IEcsSystems systems)
         {
@@ -37,9 +38,8 @@ namespace Source.Scripts.ECS.Systems
             _jumpFilter = _world.Filter<AnimatorData>().Inc<CharacterData>().Inc<AnimationJumpRequest>().End();
             _attackOverheadFilter = _world.Filter<AnimatorData>().Inc<AnimationAttackUpRequest>().Inc<CharacterData>().End();
             _attackMiddleFilter = _world.Filter<AnimatorData>().Inc<AnimationAttackMiddleRequest>().Inc<CharacterData>().End();
-            _attackUppercutFilter = _world.Filter<AnimatorData>().Inc<AnimationAttackDownRequest>().Inc<CharacterData>().End();
+            _attackUppercutFilter = _world.Filter<AnimatorData>().Inc<AnimationAttackDownRequestMark>().Inc<CharacterData>().End();
             _groundTouchFilter = _world.Filter<AnimatorData>().Inc<CharacterData>().Inc<GroundTouchMark>().End();
-            _sideTouchFilter = _world.Filter<AnimatorData>().Inc<CharacterData>().Inc<GroundTouchMark>().End();
             _groundDontTouchFilter = _world.Filter<AnimatorData>().Inc<CharacterData>().Exc<GroundTouchMark>().End();
         }
 
@@ -53,6 +53,10 @@ namespace Source.Scripts.ECS.Systems
             foreach (var entity in _attackUppercutFilter) AttackUppercut(entity);
             foreach (var entity in _groundTouchFilter) GroundTouch(entity, true);
             foreach (var entity in _groundDontTouchFilter) GroundTouch(entity, false);
+            foreach (var entity in AnySideTouchFilter)
+            {
+                
+            }
         }
 
         private void GroundTouch(int entity, bool b)
@@ -90,7 +94,7 @@ namespace Source.Scripts.ECS.Systems
 
         private void AttackUppercut(int entity)
         {
-            _componenter.Del<AnimationAttackDownRequest>(entity);
+            _componenter.Del<AnimationAttackDownRequestMark>(entity);
             ref var animatorData = ref _componenter.Get<AnimatorData>(entity);
             animatorData.Value.SetTrigger(AnimationStrings.AttackUppercut);
         }

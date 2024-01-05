@@ -7,9 +7,9 @@ namespace Source.Scripts.MonoBehaviours
     public class PlayerCharacter : Character, IPlayer, ILightable
 
     {
-        [SerializeField] private Light2D light;
+        [SerializeField] private Light2D characterLight;
 
-        public Light2D Light => light;   
+        public Light2D Light => characterLight;   
             
         public override void OnDead()
         {

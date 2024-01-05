@@ -1,9 +1,9 @@
-﻿
+﻿using Source.EasyECS.Interfaces;
 using Source.Scripts.MonoBehaviours.Abstractions;
 
-namespace Source.Scripts.ECS.Components
+namespace Source.Scripts.ECS.Components.Data
 {
-    public struct CharacterData
+    public struct CharacterData : IEcsData<ICharacter>
     {
         public ICharacter Value;
 

@@ -1,6 +1,8 @@
 ﻿using Source.EasyECS;
 using Source.MonoBehaviours;
 using Source.Scripts.ECS.Components;
+using Source.Scripts.ECS.Components.Data;
+using Source.Scripts.ECS.Components.Requests.Attack;
 using Source.Scripts.ECS.Marks;
 using Source.Scripts.ECS.Requests;
 using Source.Scripts.ECS.Requests.Attack;
@@ -110,7 +112,7 @@ namespace Source.Scripts.ECS.Systems
         private void AttackDown(int entity)
         {
             _componenter.Del<AttackRequest>(entity);
-            _componenter.Add<AnimationAttackDownRequest>(entity);
+            _componenter.Add<AnimationAttackDownRequestMark>(entity);
             PrepareAttack(entity, WeaponType.Down);
             AddAttackReload(entity);
         }
