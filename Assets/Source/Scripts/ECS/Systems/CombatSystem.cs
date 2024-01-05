@@ -3,6 +3,7 @@ using Source.MonoBehaviours;
 using Source.Scripts.ECS.Components;
 using Source.Scripts.ECS.Marks;
 using Source.Scripts.ECS.Requests;
+using Source.Scripts.ECS.Requests.Attack;
 using Source.Scripts.MonoBehaviours;
 using UnityEngine;
 
@@ -15,6 +16,7 @@ namespace Source.Scripts.ECS.Systems
         private EcsFilter _attackUpFilter;
         private EcsFilter _attackMiddleFilter;
         private EcsFilter _attackDownFilter;
+        private EcsFilter _attackBowFilter;
         private EcsFilter _reloadFilter;
         private EcsFilter _weaponActivateFilter;
         private EcsFilter _weaponPreparingFilter;
@@ -24,9 +26,17 @@ namespace Source.Scripts.ECS.Systems
         {
             _world = systems.GetWorld();
             _componenter = systems.GetSharedEcsSystem<Componenter>();
-            _attackUpFilter = _world.Filter<AttackRequest>().Inc<MousePositionUpMark>().Inc<WeaponHandlerData>().Exc<AttackReloadData>().Exc<PreparingWeaponActivatedData>().Exc<WeaponActivatedData>().Exc<AfterKickWeaponData>().End();
-            _attackMiddleFilter = _world.Filter<AttackRequest>().Inc<MousePositionMiddleMark>().Inc<WeaponHandlerData>().Exc<AttackReloadData>().Exc<PreparingWeaponActivatedData>().Exc<WeaponActivatedData>().Exc<AfterKickWeaponData>().End();
-            _attackDownFilter = _world.Filter<AttackRequest>().Inc<MousePositionDownMark>().Inc<WeaponHandlerData>().Exc<AttackReloadData>().Exc<PreparingWeaponActivatedData>().Exc<WeaponActivatedData>().Exc<AfterKickWeaponData>().End();
+            _attackUpFilter = _world.Filter<AttackRequest>().Inc<MousePositionUpMark>().Inc<WeaponHandlerData>()
+                .Exc<AttackReloadData>().Exc<PreparingWeaponActivatedData>().Exc<WeaponActivatedData>()
+                .Exc<AfterKickWeaponData>().End();
+            _attackMiddleFilter = _world.Filter<AttackRequest>().Inc<MousePositionMiddleMark>().Inc<WeaponHandlerData>()
+                .Exc<AttackReloadData>().Exc<PreparingWeaponActivatedData>().Exc<WeaponActivatedData>()
+                .Exc<AfterKickWeaponData>().End();
+            _attackDownFilter = _world.Filter<AttackRequest>().Inc<MousePositionDownMark>().Inc<WeaponHandlerData>()
+                .Exc<AttackReloadData>().Exc<PreparingWeaponActivatedData>().Exc<WeaponActivatedData>()
+                .Exc<AfterKickWeaponData>().End();
+            _attackBowFilter = _world.Filter<AttackRequest>().Inc<WeaponHandlerData>().Exc<AttackReloadData>()
+                .Exc<PreparingWeaponActivatedData>().Exc<WeaponActivatedData>().Exc<AfterKickWeaponData>().End();
             _reloadFilter = _world.Filter<AttackReloadData>().End();
             _weaponActivateFilter = _world.Filter<WeaponActivatedData>().Inc<WeaponHandlerData>().End();
             _weaponPreparingFilter = _world.Filter<PreparingWeaponActivatedData>().Inc<WeaponHandlerData>().End();
@@ -39,6 +49,7 @@ namespace Source.Scripts.ECS.Systems
             foreach (var entity in _attackUpFilter) AttackUp(entity);
             foreach (var entity in _attackMiddleFilter) AttackMiddle(entity);
             foreach (var entity in _attackDownFilter) AttackDown(entity);
+            //foreach (var entity in _attackBowFilter) AttackBow(entity);
             foreach (var entity in _weaponActivateFilter) AttackProcess(entity);
             foreach (var entity in _weaponPreparingFilter) PrepareProcess(entity);
             foreach (var entity in _weaponAfterKickFilter) AfterKickProcess(entity);

@@ -2,6 +2,7 @@
 using Source.Scripts.ECS.Components;
 using Source.Scripts.ECS.Marks;
 using Source.Scripts.ECS.Requests;
+using Source.Scripts.ECS.Requests.Attack;
 using UnityEngine;
 
 namespace Source.Scripts.ECS.Systems
@@ -18,6 +19,7 @@ namespace Source.Scripts.ECS.Systems
         private EcsFilter _jumpBothFilter;
         private EcsFilter _mousePositionFilter;
         private EcsFilter _attackFilter;
+        private EcsFilter _attackBowFilter;
         
         public void Init(IEcsSystems systems)
         {
@@ -31,6 +33,7 @@ namespace Source.Scripts.ECS.Systems
             _jumpBothFilter = _world.Filter<PlayerMark>().Inc<LeftSideTouchMark>().Inc<RightSideTouchMark>().Exc<GroundTouchMark>().End();
             _mousePositionFilter = _world.Filter<PlayerMark>().Inc<TransformData>().End();
             _attackFilter = _world.Filter<PlayerMark>().Exc<AttackReloadData>().End();
+            _attackBowFilter = _world.Filter<PlayerMark>().Exc<AttackReloadData>().End();
         }
 
         public void Run(IEcsSystems systems)
@@ -42,11 +45,16 @@ namespace Source.Scripts.ECS.Systems
             foreach (var entity in _jumpBothFilter) TryCreateJumpRequest(entity);
             foreach (var entity in _mousePositionFilter) TryAddMousePosition(entity);
             foreach (var entity in _attackFilter) TryAttack(entity);
+            foreach (var entity in _attackBowFilter) TryBowAttack(entity);
         }
 
         private void TryAttack(int entity)
         {
             if (Input.GetMouseButtonDown(0))_componenter.AddOrGet<AttackRequest>(entity);
+        }
+        private void TryBowAttack(int entity)
+        {
+            if (Input.GetMouseButtonDown(1))_componenter.AddOrGet<AttackRequest>(entity);
         }
 
         private void TryAddMousePosition(int entity)

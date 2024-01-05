@@ -1,7 +1,11 @@
 ﻿using Source.EasyECS;
+using Source.Scripts.Constants;
 using Source.Scripts.ECS.Components;
 using Source.Scripts.ECS.Marks;
 using Source.Scripts.ECS.Requests;
+using Source.Scripts.ECS.Requests.Attack;
+using Source.Scripts.test;
+using UnityEngine;
 
 namespace Source.Scripts.ECS.Systems
 {
@@ -18,6 +22,9 @@ namespace Source.Scripts.ECS.Systems
         private EcsFilter _attackUppercutFilter;
         private EcsFilter _groundTouchFilter;
         private EcsFilter _groundDontTouchFilter;
+        private EcsFilter _sideTouchFilter;
+        
+        
         
         
         public void Init(IEcsSystems systems)
@@ -32,6 +39,7 @@ namespace Source.Scripts.ECS.Systems
             _attackMiddleFilter = _world.Filter<AnimatorData>().Inc<AnimationAttackMiddleRequest>().Inc<CharacterData>().End();
             _attackUppercutFilter = _world.Filter<AnimatorData>().Inc<AnimationAttackDownRequest>().Inc<CharacterData>().End();
             _groundTouchFilter = _world.Filter<AnimatorData>().Inc<CharacterData>().Inc<GroundTouchMark>().End();
+            _sideTouchFilter = _world.Filter<AnimatorData>().Inc<CharacterData>().Inc<GroundTouchMark>().End();
             _groundDontTouchFilter = _world.Filter<AnimatorData>().Inc<CharacterData>().Exc<GroundTouchMark>().End();
         }
 
@@ -50,41 +58,41 @@ namespace Source.Scripts.ECS.Systems
         private void GroundTouch(int entity, bool b)
         {
             ref var animatorData = ref _componenter.Get<AnimatorData>(entity);
-            animatorData.Value.SetBool("OnGround", b);
+            animatorData.Value.SetBool(AnimationStrings.OnGround, b);
         }
 
         private void Move(int entity, bool isMoving)
         {
             ref var animatorData = ref _componenter.Get<AnimatorData>(entity);
-            animatorData.Value.SetBool("IsMoving", isMoving);
+            animatorData.Value.SetBool(AnimationStrings.IsMoving, isMoving);
         }
 
         private void Jump(int entity)
         {
             _componenter.Del<AnimationJumpRequest>(entity);
             ref var animatorData = ref _componenter.Get<AnimatorData>(entity);
-            animatorData.Value.SetTrigger("Jump");
+            animatorData.Value.SetTrigger(AnimationStrings.Jump);
         }
         
         private void AttackOverhead(int entity)
         {
             _componenter.Del<AnimationAttackUpRequest>(entity);
             ref var animatorData = ref _componenter.Get<AnimatorData>(entity);
-            animatorData.Value.SetTrigger("AttackOverhead");
+            animatorData.Value.SetTrigger(AnimationStrings.AttackOverhead);
         }
 
         private void AttackMiddle(int entity)
         {
             _componenter.Del<AnimationAttackMiddleRequest>(entity);
             ref var animatorData = ref _componenter.Get<AnimatorData>(entity);
-            animatorData.Value.SetTrigger("AttackMiddle");
+            animatorData.Value.SetTrigger(AnimationStrings.AttackMiddle);
         }
 
         private void AttackUppercut(int entity)
         {
             _componenter.Del<AnimationAttackDownRequest>(entity);
             ref var animatorData = ref _componenter.Get<AnimatorData>(entity);
-            animatorData.Value.SetTrigger("AttackUppercut");
+            animatorData.Value.SetTrigger(AnimationStrings.AttackUppercut);
         }
         
     }
