@@ -8,6 +8,7 @@ namespace Source.EasyECS
         protected override void SetInitSystems(IEcsSystems initSystems)
         {
             initSystems.Add(new InitializerSystem());
+            initSystems.Add(new InformationSystem());
         }
 
         protected override void SetUpdateSystems(IEcsSystems updateSystems)

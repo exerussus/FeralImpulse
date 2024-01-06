@@ -7,9 +7,9 @@ namespace Source.Scripts.Constants
         // Animation States
         public const string OnGround = "OnGround";
         public const string IsMoving = "IsMoving";
-        public const string SideTouch = "SideTouch";
-        public const string SideLeftTouch = "SideLeftTouch";
-        public const string SideRightTouch = "SideRightTouch";
+        
+        public const string SideBackTouch = "SideBackTouch";
+        public const string SideFrontTouch = "SideFrontTouch";
         
         public const string Idle = "Idle";
         public const string IdleCombat = "IdleCombat";

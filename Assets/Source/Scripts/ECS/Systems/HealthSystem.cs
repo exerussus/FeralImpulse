@@ -3,6 +3,7 @@ using Source.Scripts.ECS.Components;
 using Source.Scripts.ECS.Components.Data;
 using Source.Scripts.ECS.Components.Marks;
 using Source.Scripts.ECS.Components.Requests;
+using UnityEngine;
 
 namespace Source.Scripts.ECS.Systems
 {
@@ -12,6 +13,8 @@ namespace Source.Scripts.ECS.Systems
         private Componenter _componenter;
         private EcsFilter _weaponRequestsFilter;
         private EcsFilter _healthFilter;
+
+        
         
         
         
@@ -19,6 +22,8 @@ namespace Source.Scripts.ECS.Systems
         {
             _world = systems.GetWorld();
             _componenter = systems.GetSharedEcsSystem<Componenter>();
+            
+            
             _weaponRequestsFilter = _world.Filter<HealthWeaponDamageRequestData>().End();
             _healthFilter = _world.Filter<HealthData>().Exc<DeadMark>().End();
         }
@@ -27,6 +32,8 @@ namespace Source.Scripts.ECS.Systems
         {
             foreach (var entity in _weaponRequestsFilter) WeaponDamage(entity);
             foreach (var entity in _healthFilter) DeadCheck(entity);
+            
+            
 
         }
 
@@ -53,5 +60,7 @@ namespace Source.Scripts.ECS.Systems
                 healthData.Healthy.OnDead();
             }
         }
+
+        
     }
 }

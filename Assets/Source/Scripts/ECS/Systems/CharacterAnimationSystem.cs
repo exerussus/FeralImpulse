@@ -12,7 +12,6 @@ namespace Source.Scripts.ECS.Systems
         private EcsWorld _world;
         private IEcsSystems _systems;
         private Componenter _componenter;
-        private Filter _filter;
         private EcsFilter _idleFilter;
         private EcsFilter _runFilter;
         private EcsFilter _jumpFilter;
@@ -21,10 +20,12 @@ namespace Source.Scripts.ECS.Systems
         private EcsFilter _attackUppercutFilter;
         private EcsFilter _groundTouchFilter;
         private EcsFilter _groundDontTouchFilter;
-        private EcsFilter _sideLeftTouchFilter;
-        private EcsFilter _sideRightTouchFilter;
-        //private EcsFilter _sideLeftAndRightTouchFilter;
-        //private EcsFilter _sideLeftAndRightDndGroundTouchFilter;
+        
+        private EcsFilter _sideBackTouchFilter;
+        private EcsFilter _sideBackDontTouchFilter;
+        private EcsFilter _sideFrontTouchFilter;
+        private EcsFilter _sideFrontDontTouchFilter;
+        
 
         
         public void Init(IEcsSystems systems)
@@ -32,33 +33,44 @@ namespace Source.Scripts.ECS.Systems
             _world = systems.GetWorld();
             _systems = systems;
             _componenter = systems.GetSharedEcsSystem<Componenter>();
+            
             _idleFilter = _world.Filter<AnimatorData>().Inc<CharacterData>().Exc<AnimationMovingMark>().End();
             _runFilter = _world.Filter<AnimatorData>().Inc<CharacterData>().Inc<AnimationMovingMark>().End();
             _jumpFilter = _world.Filter<AnimatorData>().Inc<CharacterData>().Inc<AnimationJumpRequest>().End();
-            _attackOverheadFilter = _world.Filter<AnimatorData>().Inc<AnimationAttackUpRequest>().Inc<CharacterData>().End();
-            _attackMiddleFilter = _world.Filter<AnimatorData>().Inc<AnimationAttackMiddleRequest>().Inc<CharacterData>().End();
-            _attackUppercutFilter = _world.Filter<AnimatorData>().Inc<AnimationAttackDownRequestMark>().Inc<CharacterData>().End();
+            
+            _attackOverheadFilter = _world.Filter<AnimatorData>().Inc<CharacterData>().Inc<AnimationAttackUpRequest>().End();
+            _attackMiddleFilter = _world.Filter<AnimatorData>().Inc<CharacterData>().Inc<AnimationAttackMiddleRequest>().End();
+            _attackUppercutFilter = _world.Filter<AnimatorData>().Inc<CharacterData>().Inc<AnimationAttackDownRequestMark>().End();
+            
             _groundTouchFilter = _world.Filter<AnimatorData>().Inc<CharacterData>().Inc<GroundTouchMark>().End();
             _groundDontTouchFilter = _world.Filter<AnimatorData>().Inc<CharacterData>().Exc<GroundTouchMark>().End();
-            _sideLeftTouchFilter = _world.Filter<AnimatorData>().Inc<CharacterData>().Inc<LeftSideTouchMark>().End();
-            _sideRightTouchFilter = _world.Filter<AnimatorData>().Inc<CharacterData>().Inc<RightSideTouchMark>().End();
-            //_sideLeftAndRightTouchFilter = _world.Filter<AnimatorData>().Inc<CharacterData>().End();
-            //_sideLeftAndRightDndGroundTouchFilter = _world.Filter<AnimatorData>().Inc<CharacterData>().End();
+            
+            _sideBackTouchFilter = _world.Filter<AnimatorData>().Inc<CharacterData>().Inc<LeftSideTouchMark>().End();
+            _sideBackDontTouchFilter = _world.Filter<AnimatorData>().Inc<CharacterData>().Exc<LeftSideTouchMark>().End();
+            _sideFrontTouchFilter = _world.Filter<AnimatorData>().Inc<CharacterData>().Inc<RightSideTouchMark>().End();
+            _sideFrontDontTouchFilter = _world.Filter<AnimatorData>().Inc<CharacterData>().Exc<RightSideTouchMark>().End();
+            
+            
         }
 
         public void Run(IEcsSystems systems)
         {
-            foreach (var entity in _idleFilter) Move(entity, false);
-            foreach (var entity in _runFilter) Move(entity, true);
-            foreach (var entity in _jumpFilter) Jump(entity);
-            foreach (var entity in _attackOverheadFilter) AttackOverhead(entity);
-            foreach (var entity in _attackMiddleFilter) AttackMiddle(entity);
-            foreach (var entity in _attackUppercutFilter) AttackUppercut(entity);
-            foreach (var entity in _groundTouchFilter) GroundTouch(entity, true);
-            foreach (var entity in _groundDontTouchFilter) GroundTouch(entity, false);
-            foreach (var entity in _sideLeftTouchFilter) SetSideTouch(entity, AnimationStrings.SideLeftTouch,true);
-            foreach (var entity in _sideRightTouchFilter) SetSideTouch(entity, AnimationStrings.SideRightTouch,true);
-
+            _idleFilter.ForeachEntities(Move, false);
+            _runFilter.ForeachEntities(Move, true);
+            _jumpFilter.ForeachEntities(Jump);
+            
+            _attackOverheadFilter.ForeachEntities(AttackOverhead);
+            _attackMiddleFilter.ForeachEntities(AttackMiddle);
+            _attackUppercutFilter.ForeachEntities(AttackUppercut);
+            
+            _groundTouchFilter.ForeachEntities(GroundTouch, true);
+            _groundDontTouchFilter.ForeachEntities(GroundTouch, false);  
+                    
+            _sideBackTouchFilter.ForeachEntities(SetSideTouch, AnimationStrings.SideBackTouch, true);
+            _sideBackDontTouchFilter.ForeachEntities(SetSideTouch, AnimationStrings.SideBackTouch, false);
+            _sideFrontTouchFilter.ForeachEntities(SetSideTouch, AnimationStrings.SideFrontTouch, true);
+            _sideFrontDontTouchFilter.ForeachEntities(SetSideTouch, AnimationStrings.SideFrontTouch, false);
+            
         }
 
         private void GroundTouch(int entity, bool b)
@@ -71,9 +83,8 @@ namespace Source.Scripts.ECS.Systems
         {
             ref var animatorData = ref _componenter.Get<AnimatorData>(entity);
             animatorData.Value.SetBool(animationParameter, b);
-            
-            
         }
+        
         
         
         private void Move(int entity, bool isMoving)

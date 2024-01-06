@@ -23,11 +23,15 @@ namespace Source.Scripts.ECS.Systems
         private EcsFilter _attackFilter;
         private EcsFilter _attackBowFilter;
         
+        private InformationSystem _informationSystem;
+        
         public void Init(IEcsSystems systems)
         {
             _world = systems.GetWorld();
             _systems = systems;
             _componenter = systems.GetSharedEcsSystem<Componenter>();
+            _informationSystem = systems.GetSharedEcsSystem<InformationSystem>();
+            
             _playerMoveFilter = _world.Filter<PlayerMark>().Inc<GroundTouchMark>().End();
             _jumpGroundFilter = _world.Filter<PlayerMark>().Inc<GroundTouchMark>().End();
             _jumpLeftTouchFilter = _world.Filter<PlayerMark>().Inc<LeftSideTouchMark>().Exc<GroundTouchMark>().End();
@@ -48,6 +52,7 @@ namespace Source.Scripts.ECS.Systems
             foreach (var entity in _mousePositionFilter) TryAddMousePosition(entity);
             foreach (var entity in _attackFilter) TryAttack(entity);
             foreach (var entity in _attackBowFilter) TryBowAttack(entity);
+            DebugHealthChanger();
         }
 
         private void TryAttack(int entity)
@@ -118,6 +123,23 @@ namespace Source.Scripts.ECS.Systems
             if (Input.GetKeyDown(KeyCode.Space)) _componenter.AddOrGet<JumpRequest>(entity);
         }
         
-        
+        private void DebugHealthChanger()
+        {
+            if (Input.GetKeyDown(KeyCode.Z))
+            {
+                ref var healthData = ref _componenter.Get<HealthData>(_world.Filter<PlayerMark>().End().GetFirstEntity());
+                healthData.CurrentValue -= 2;
+                healthData.Healthy.OnHit();
+                
+                _informationSystem.OnHealthChange?.Invoke();
+            }
+            if (Input.GetKeyDown(KeyCode.C))
+            {
+                ref var healthData = ref _componenter.Get<HealthData>(_world.Filter<PlayerMark>().End().GetFirstEntity());
+                healthData.CurrentValue += 10;
+                
+                _informationSystem.OnHealthChange?.Invoke();
+            }
+        }
     }
 }
