@@ -3,7 +3,7 @@ using System;
 using Source.EasyECS;
 using Source.MonoBehaviours;
 using Source.Scripts.ECS.Systems;
-using Source.Scripts.Ui;
+using Source.Scripts.UI.ElementsUI;
 
 namespace Source.Scripts.UI
 {

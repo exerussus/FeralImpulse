@@ -14,7 +14,8 @@ namespace Source.Scripts.MonoBehaviours
             
         public override void OnDead()
         {
-    
+            
+            
         }
     
         public override void OnHit()

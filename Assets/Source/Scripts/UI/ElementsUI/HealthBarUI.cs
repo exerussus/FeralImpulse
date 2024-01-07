@@ -1,8 +1,8 @@
-using Source.MonoBehaviours;
 using UnityEngine;
 using UnityEngine.UI;
+using MonoBehaviourUI = Source.MonoBehaviours.MonoBehaviourUI;
 
-namespace Source.Scripts.Ui 
+namespace Source.Scripts.UI.ElementsUI
 {
     public class HealthBarUI : MonoBehaviourUI
     {

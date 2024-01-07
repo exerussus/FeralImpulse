@@ -4,6 +4,7 @@ using Source.Scripts.ECS.Components.Data;
 using Source.Scripts.ECS.Components.Marks;
 using Source.Scripts.ECS.Components.Requests.Attack;
 using Source.Scripts.ECS.Components.Requests.Jump;
+using UnityEngine;
 
 namespace Source.Scripts.ECS.Systems
 {
@@ -25,6 +26,7 @@ namespace Source.Scripts.ECS.Systems
         private EcsFilter _sideBackDontTouchFilter;
         private EcsFilter _sideFrontTouchFilter;
         private EcsFilter _sideFrontDontTouchFilter;
+
         
 
         
