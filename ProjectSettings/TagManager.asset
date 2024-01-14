@@ -8,7 +8,7 @@ TagManager:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Env
   - Water
   - UI
   - 
@@ -43,6 +43,9 @@ TagManager:
     locked: 0
   - name: terrain
     uniqueID: 3499245319
+    locked: 0
+  - name: FX
+    uniqueID: 2842256115
     locked: 0
   - name: Default
     uniqueID: 0

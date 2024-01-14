@@ -1,8 +1,11 @@
 ﻿using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Source.Scripts.MonoBehaviours.Abstractions
 {
+    /// <summary>
+    /// Персонаж.
+    /// </summary>
+    
     public abstract class Character : MonoBehaviour, 
         ICharacter, IEntityObject, IHealthy, IPhysicalBody, IGroundChecker, 
         ISideChecker, IDisplayable, IAnimable, IWeaponable, IMovable
@@ -18,7 +21,7 @@ namespace Source.Scripts.MonoBehaviours.Abstractions
         [SerializeField] protected SpriteRenderer spriteRenderer;
         [SerializeField] protected Animator animator;
         [SerializeField] protected Collider2D entityCollider;
-        [FormerlySerializedAs("weaponColliderHandler")] [SerializeField] protected WeaponHandler weaponHandler;
+        [SerializeField] protected WeaponHandler weaponHandler;
         
         public Animator Animator => animator;
         public SpriteRenderer SpriteRenderer => spriteRenderer;

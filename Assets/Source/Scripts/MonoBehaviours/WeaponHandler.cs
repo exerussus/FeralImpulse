@@ -3,6 +3,10 @@ using UnityEngine;
 
 namespace Source.Scripts.MonoBehaviours
 {
+    /// <summary>
+    /// Хранит виды оружия.
+    /// </summary>
+
     public class WeaponHandler : MonoBehaviour
     {
         [SerializeField] private Weapon upWeapon;

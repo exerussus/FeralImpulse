@@ -1,7 +1,9 @@
 ﻿using Source.EasyECS;
 using Source.Scripts.ECS.Components;
-using Source.Scripts.ECS.Marks;
-using Source.Scripts.ECS.Requests;
+using Source.Scripts.ECS.Components.Data;
+using Source.Scripts.ECS.Components.Marks;
+using Source.Scripts.ECS.Components.Requests;
+using Source.Scripts.ECS.Components.Requests.Jump;
 using UnityEngine;
 using static UnityEngine.ForceMode2D;
 
@@ -19,6 +21,7 @@ namespace Source.Scripts.ECS.Systems
         private EcsFilter _jumpBothSideFilter;
         private EcsFilter _jumpLeftSideFilter;
         private EcsFilter _jumpRightSideFilter;
+        private EcsFilter _jumpReloadFilter;
 
         private const float SlowdownMultiply = 0.2f;
         private const float SpeedMultiply = 0.01f;
@@ -36,10 +39,11 @@ namespace Source.Scripts.ECS.Systems
             _leftFilter = _world.Filter<LeftMovingMark>().Inc<RigidbodyData>().Inc<MoveSpeedData>().Inc<GroundTouchMark>().End();
             _rightFilter = _world.Filter<RightMovingMark>().Inc<RigidbodyData>().Inc<MoveSpeedData>().Inc<GroundTouchMark>().End();
             _stayFilter = _world.Filter<CharacterData>().Inc<RigidbodyData>().Exc<LeftMovingMark>().Exc<RightMovingMark>().End();
-            _jumpSimpleFilter = _world.Filter<JumpForceData>().Inc<RigidbodyData>().Inc<JumpRequest>().Inc<GroundTouchMark>().End();
-            _jumpLeftSideFilter = _world.Filter<JumpForceData>().Inc<RigidbodyData>().Inc<JumpRequest>().Inc<LeftSideTouchMark>().Exc<GroundTouchMark>().End();
-            _jumpRightSideFilter = _world.Filter<JumpForceData>().Inc<RigidbodyData>().Inc<JumpRequest>().Inc<RightSideTouchMark>().Exc<GroundTouchMark>().End();
-            _jumpBothSideFilter = _world.Filter<JumpForceData>().Inc<RigidbodyData>().Inc<JumpRequest>().Inc<LeftSideTouchMark>().Inc<RightSideTouchMark>().Exc<GroundTouchMark>().End();
+            _jumpSimpleFilter = _world.Filter<JumpForceData>().Inc<RigidbodyData>().Inc<JumpRequest>().Inc<GroundTouchMark>().Exc<JumpReloadData>().End();
+            _jumpLeftSideFilter = _world.Filter<JumpForceData>().Inc<RigidbodyData>().Inc<JumpRequest>().Inc<LeftSideTouchMark>().Exc<GroundTouchMark>().Exc<JumpReloadData>().End();
+            _jumpRightSideFilter = _world.Filter<JumpForceData>().Inc<RigidbodyData>().Inc<JumpRequest>().Inc<RightSideTouchMark>().Exc<GroundTouchMark>().Exc<JumpReloadData>().End();
+            _jumpBothSideFilter = _world.Filter<JumpForceData>().Inc<RigidbodyData>().Inc<JumpRequest>().Inc<LeftSideTouchMark>().Inc<RightSideTouchMark>().Exc<GroundTouchMark>().Exc<JumpReloadData>().End();
+            _jumpReloadFilter = _world.Filter<JumpReloadData>().End();
         }
 
         public void Run(IEcsSystems systems)
@@ -51,6 +55,10 @@ namespace Source.Scripts.ECS.Systems
             foreach (var entity in _jumpBothSideFilter) JumpBoth(entity);
             foreach (var entity in _jumpLeftSideFilter) JumpLeftSide(entity);
             foreach (var entity in _jumpRightSideFilter) JumpRightSide(entity);
+            foreach (var entity in _jumpReloadFilter) JumpReloading(entity);
+            {
+                
+            }
         }
 
         private int GetFlipMultiply(int entity)
@@ -88,10 +96,39 @@ namespace Source.Scripts.ECS.Systems
             var velocity = rigidbodyData.Value.velocity;
             rigidbodyData.Value.velocity = new Vector2(velocity.x * SlowdownMultiply, velocity.y);
         }
+
+        private void JumpReloading(int entity)
+        {
+            ref var jumpReloadData = ref _componenter.Get<JumpReloadData>(entity);
+            
+            jumpReloadData.TimeRemaining -= Time.fixedDeltaTime;
+            if (jumpReloadData.TimeRemaining <= 0)
+            {
+                jumpReloadData.GroundChecker.enabled = true;
+                jumpReloadData.LeftChecker.enabled = true;
+                jumpReloadData.RightChecker.enabled = true;
+                _componenter.Del<JumpReloadData>(entity);
+            }
+        }
+
+        private void ReloadJump(int entity)
+        {
+            ref var jumpReloadData = ref _componenter.Add<JumpReloadData>(entity);
+            var jumpReloadDelay = 0.2f;
+            ref var groundCheckerData = ref _componenter.Get<GroundCheckerData>(entity);
+            ref var leftCheckerData = ref _componenter.Get<LeftSideCheckerData>(entity);
+            ref var rightCheckerData = ref _componenter.Get<RightSideCheckerData>(entity);
+            
+            jumpReloadData.InitializeValues(jumpReloadDelay, groundCheckerData.Value.Collider, leftCheckerData.Value.Collider, rightCheckerData.Value.Collider);
+            jumpReloadData.GroundChecker.enabled = false;
+            jumpReloadData.LeftChecker.enabled = false;
+            jumpReloadData.RightChecker.enabled = false;
+        }
         
         private void JumpSimple(int entity)
         {
             _componenter.Del<JumpRequest>(entity);
+            ReloadJump(entity);
             ref var rigidbodyData = ref _componenter.Get<RigidbodyData>(entity);
             ref var jumpForceData = ref _componenter.Get<JumpForceData>(entity);
             rigidbodyData.Value.AddForce(Vector2.up * jumpForceData.Value, Impulse);
@@ -101,6 +138,7 @@ namespace Source.Scripts.ECS.Systems
         private void JumpBoth(int entity)
         {
             _componenter.Del<JumpRequest>(entity);
+            ReloadJump(entity);
             ref var rigidbodyData = ref _componenter.Get<RigidbodyData>(entity);
             ref var jumpForceData = ref _componenter.Get<JumpForceData>(entity);
             rigidbodyData.Value.AddForce(VectorUp * jumpForceData.Value, Impulse);
@@ -109,8 +147,8 @@ namespace Source.Scripts.ECS.Systems
         
         private void JumpLeftSide(int entity)
         {
-            Debug.Log("JumpLeftSide");
             _componenter.Del<JumpRequest>(entity);
+            ReloadJump(entity);
             ref var rigidbodyData = ref _componenter.Get<RigidbodyData>(entity);
             ref var jumpForceData = ref _componenter.Get<JumpForceData>(entity);
             var direction = (VectorUp + VectorRight * GetFlipMultiply(entity));
@@ -121,8 +159,8 @@ namespace Source.Scripts.ECS.Systems
         
         private void JumpRightSide(int entity)
         {
-            Debug.Log("JumpRightSide");
             _componenter.Del<JumpRequest>(entity);
+            ReloadJump(entity);
             ref var rigidbodyData = ref _componenter.Get<RigidbodyData>(entity);
             ref var jumpForceData = ref _componenter.Get<JumpForceData>(entity);
             var direction = (VectorUp + VectorLeft * GetFlipMultiply(entity));

@@ -1,7 +1,9 @@
 ﻿using Source.EasyECS;
 using Source.Scripts.ECS.Components;
-using Source.Scripts.ECS.Marks;
-using Source.Scripts.ECS.Requests;
+using Source.Scripts.ECS.Components.Data;
+using Source.Scripts.ECS.Components.Marks;
+using Source.Scripts.ECS.Components.Requests;
+using UnityEngine;
 
 namespace Source.Scripts.ECS.Systems
 {
@@ -11,6 +13,8 @@ namespace Source.Scripts.ECS.Systems
         private Componenter _componenter;
         private EcsFilter _weaponRequestsFilter;
         private EcsFilter _healthFilter;
+
+        
         
         
         
@@ -18,7 +22,9 @@ namespace Source.Scripts.ECS.Systems
         {
             _world = systems.GetWorld();
             _componenter = systems.GetSharedEcsSystem<Componenter>();
-            _weaponRequestsFilter = _world.Filter<HealthWeaponDamageRequest>().End();
+            
+            
+            _weaponRequestsFilter = _world.Filter<HealthWeaponDamageRequestData>().End();
             _healthFilter = _world.Filter<HealthData>().Exc<DeadMark>().End();
         }
 
@@ -26,12 +32,14 @@ namespace Source.Scripts.ECS.Systems
         {
             foreach (var entity in _weaponRequestsFilter) WeaponDamage(entity);
             foreach (var entity in _healthFilter) DeadCheck(entity);
+            
+            
 
         }
 
         private void WeaponDamage(int entity)
         {
-            ref var weaponDamageRequest = ref _componenter.Get<HealthWeaponDamageRequest>(entity);
+            ref var weaponDamageRequest = ref _componenter.Get<HealthWeaponDamageRequestData>(entity);
             ref var weaponHandlerData = ref _componenter.Get<WeaponHandlerData>(weaponDamageRequest.OriginEntity);
             var damage = weaponHandlerData.Value.CurrentWeapon.Damage;
             foreach (var targetEntity in weaponDamageRequest.TargetEntities)
@@ -40,7 +48,7 @@ namespace Source.Scripts.ECS.Systems
                 healthData.CurrentValue -= damage;
                 healthData.Healthy.OnHit();
             }
-            _componenter.Del<HealthWeaponDamageRequest>(entity);
+            _componenter.Del<HealthWeaponDamageRequestData>(entity);
         }
 
         private void DeadCheck(int entity)
@@ -52,5 +60,7 @@ namespace Source.Scripts.ECS.Systems
                 healthData.Healthy.OnDead();
             }
         }
+
+        
     }
 }

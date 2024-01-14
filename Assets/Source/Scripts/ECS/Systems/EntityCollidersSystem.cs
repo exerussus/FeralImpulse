@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using Source.EasyECS;
 using Source.Scripts.ECS.Components;
-using Source.Scripts.ECS.Marks;
-using Source.Scripts.ECS.Requests;
+using Source.Scripts.ECS.Components.Data;
+using Source.Scripts.ECS.Components.Marks;
+using Source.Scripts.ECS.Components.Requests;
 using Source.Scripts.MonoBehaviours.Abstractions;
 using UnityEngine;
 
@@ -22,7 +23,7 @@ namespace Source.Scripts.ECS.Systems
         {
             _world = systems.GetWorld();
             _componenter = systems.GetSharedEcsSystem<Componenter>();
-            _initializeFilter = _world.Filter<EntityObjectData>().Exc<InitializeColliderMark>().End();
+            _initializeFilter = _world.Filter<EntityObjectData>().Inc<DontInitializeColliderMark>().End();
             _activatedWeaponFilter = _world.Filter<WeaponHandlerData>().Inc<WeaponActivatedData>().End();
             _entityObjects = new Dictionary<Collider2D, IEntityObject>();
             _entityObjectsRevers = new Dictionary<IEntityObject, Collider2D>();
@@ -37,7 +38,7 @@ namespace Source.Scripts.ECS.Systems
 
         private void InitializeCollider(int entity)
         {
-            _componenter.Add<InitializeColliderMark>(entity);
+            _componenter.Del<DontInitializeColliderMark>(entity);
             ref var entityObjectData = ref _componenter.Get<EntityObjectData>(entity);
             _entityObjects[entityObjectData.Value.Collider] = entityObjectData.Value;
             _entityObjectsRevers[entityObjectData.Value] = entityObjectData.Value.Collider;
@@ -59,16 +60,15 @@ namespace Source.Scripts.ECS.Systems
                 var targetEntity = _entityObjects[detectedCollider].Entity;
 
                 if (!_componenter.Has<HealthData>(targetEntity)) continue;
-                if (_componenter.Has<HealthWeaponDamageRequest>(originEntity))
+                if (_componenter.Has<HealthWeaponDamageRequestData>(originEntity))
                 {
-                    ref var healthWeaponDamageRequest = ref _componenter.Get<HealthWeaponDamageRequest>(originEntity);
+                    ref var healthWeaponDamageRequest = ref _componenter.Get<HealthWeaponDamageRequestData>(originEntity);
                     healthWeaponDamageRequest.TargetEntities.Add(targetEntity);
                 }
                 else
                 {
-                    ref var healthWeaponDamageRequest = ref _componenter.Add<HealthWeaponDamageRequest>(originEntity);
-                    healthWeaponDamageRequest.OriginEntity = originEntity;
-                    healthWeaponDamageRequest.TargetEntities = new List<int>();
+                    ref var healthWeaponDamageRequest = ref _componenter.Add<HealthWeaponDamageRequestData>(originEntity);
+                    healthWeaponDamageRequest.InitializeValues(originEntity, new List<int>());
                     healthWeaponDamageRequest.TargetEntities.Add(targetEntity);
                 }
             }

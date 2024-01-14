@@ -1,7 +1,7 @@
 ﻿using Source.EasyECS;
-using Source.ECS.Marks;
 using Source.Scripts.ECS.Components;
-using Source.Scripts.ECS.Marks;
+using Source.Scripts.ECS.Components.Data;
+using Source.Scripts.ECS.Components.Marks;
 using Source.Scripts.MonoBehaviours;
 using Source.Scripts.MonoBehaviours.Abstractions;
 
@@ -36,6 +36,7 @@ namespace Source.Scripts.ECS.Systems
                 if (monoBehaviour is IPlayer player) InitPlayer(entity, player);
                 if (monoBehaviour is ISideChecker sideChecker) InitSideChecker(entity, sideChecker);
                 if (monoBehaviour is IWeaponable weaponable) InitWeaponable(entity, weaponable);
+                if (monoBehaviour is ILightable lightable) InitLightable(entity, lightable);
             }
         }
         
@@ -71,6 +72,11 @@ namespace Source.Scripts.ECS.Systems
         {
             ref var entityObjectData = ref _componenter.Add<EntityObjectData>(entity);
             entityObjectData.InitializeValues(entity, entityObject);
+            
+            ref var transformData = ref _componenter.Add<TransformData>(entity);
+            transformData.InitializeValues(entityObject);
+            
+            _componenter.Add<DontInitializeColliderMark>(entity);
         }
         
         public void InitGroundChecker(int entity, IGroundChecker groundChecker)
@@ -100,9 +106,6 @@ namespace Source.Scripts.ECS.Systems
         {
             ref var rigidbodyData = ref _componenter.Add<RigidbodyData>(entity);
             rigidbodyData.InitializeValues(physicalBody);
-            
-            ref var transformData = ref _componenter.Add<TransformData>(entity);
-            transformData.InitializeValues(physicalBody);
         }
         
         public void InitPlayer(int entity, IPlayer player)
