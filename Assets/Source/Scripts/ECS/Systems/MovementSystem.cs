@@ -36,13 +36,14 @@ namespace Source.Scripts.ECS.Systems
             _world = systems.GetWorld();
             _systems = systems;
             _componenter = systems.GetSharedEcsSystem<Componenter>();
-            _leftFilter = _world.Filter<LeftMovingMark>().Inc<RigidbodyData>().Inc<MoveSpeedData>().Inc<GroundTouchMark>().End();
-            _rightFilter = _world.Filter<RightMovingMark>().Inc<RigidbodyData>().Inc<MoveSpeedData>().Inc<GroundTouchMark>().End();
-            _stayFilter = _world.Filter<CharacterData>().Inc<RigidbodyData>().Exc<LeftMovingMark>().Exc<RightMovingMark>().End();
-            _jumpSimpleFilter = _world.Filter<JumpForceData>().Inc<RigidbodyData>().Inc<JumpRequest>().Inc<GroundTouchMark>().Exc<JumpReloadData>().End();
-            _jumpLeftSideFilter = _world.Filter<JumpForceData>().Inc<RigidbodyData>().Inc<JumpRequest>().Inc<LeftSideTouchMark>().Exc<GroundTouchMark>().Exc<JumpReloadData>().End();
-            _jumpRightSideFilter = _world.Filter<JumpForceData>().Inc<RigidbodyData>().Inc<JumpRequest>().Inc<RightSideTouchMark>().Exc<GroundTouchMark>().Exc<JumpReloadData>().End();
-            _jumpBothSideFilter = _world.Filter<JumpForceData>().Inc<RigidbodyData>().Inc<JumpRequest>().Inc<LeftSideTouchMark>().Inc<RightSideTouchMark>().Exc<GroundTouchMark>().Exc<JumpReloadData>().End();
+            _leftFilter = _world.Filter<LeftMovingMark>().Inc<RigidbodyData>().Inc<MoveSpeedData>().Inc<GroundTouchMark>().Exc<DashProgressData>().End();
+            _rightFilter = _world.Filter<RightMovingMark>().Inc<RigidbodyData>().Inc<MoveSpeedData>().Inc<GroundTouchMark>().Exc<DashProgressData>().End();
+            _stayFilter = _world.Filter<CharacterData>().Inc<RigidbodyData>().Inc<GroundTouchMark>().Exc<LeftMovingMark>().Exc<RightMovingMark>().Exc<DashProgressData>().End();
+            _jumpSimpleFilter = _world.Filter<JumpForceData>().Inc<RigidbodyData>().Inc<JumpRequest>().Inc<GroundTouchMark>().Exc<JumpReloadData>().Exc<DashProgressData>().End();
+            _jumpLeftSideFilter = _world.Filter<JumpForceData>().Inc<RigidbodyData>().Inc<JumpRequest>().Inc<LeftSideTouchMark>().Exc<GroundTouchMark>().Exc<JumpReloadData>().Exc<DashProgressData>().End();
+            _jumpRightSideFilter = _world.Filter<JumpForceData>().Inc<RigidbodyData>().Inc<JumpRequest>().Inc<RightSideTouchMark>().Exc<GroundTouchMark>().Exc<JumpReloadData>().Exc<DashProgressData>().End();
+            _jumpBothSideFilter = _world.Filter<JumpForceData>().Inc<RigidbodyData>().Inc<JumpRequest>().Inc<LeftSideTouchMark>().Inc<RightSideTouchMark>().Exc<GroundTouchMark>()
+                .Exc<JumpReloadData>().Exc<DashProgressData>().End();
             _jumpReloadFilter = _world.Filter<JumpReloadData>().End();
         }
 
@@ -141,6 +142,7 @@ namespace Source.Scripts.ECS.Systems
             ReloadJump(entity);
             ref var rigidbodyData = ref _componenter.Get<RigidbodyData>(entity);
             ref var jumpForceData = ref _componenter.Get<JumpForceData>(entity);
+            rigidbodyData.Value.velocity -= rigidbodyData.Value.velocity.y * Vector2.up;
             rigidbodyData.Value.AddForce(VectorUp * jumpForceData.Value, Impulse);
             _componenter.AddOrGet<AnimationJumpRequest>(entity);
         }
@@ -152,6 +154,7 @@ namespace Source.Scripts.ECS.Systems
             ref var rigidbodyData = ref _componenter.Get<RigidbodyData>(entity);
             ref var jumpForceData = ref _componenter.Get<JumpForceData>(entity);
             var direction = (VectorUp + VectorRight * GetFlipMultiply(entity));
+            rigidbodyData.Value.velocity -= rigidbodyData.Value.velocity.y * Vector2.up;
             rigidbodyData.Value.AddForce(direction * jumpForceData.Value, Impulse);
             _componenter.AddOrGet<AnimationJumpRequest>(entity);
             _componenter.AddOrGet<FlipJumpLeftRequest>(entity);
@@ -164,6 +167,7 @@ namespace Source.Scripts.ECS.Systems
             ref var rigidbodyData = ref _componenter.Get<RigidbodyData>(entity);
             ref var jumpForceData = ref _componenter.Get<JumpForceData>(entity);
             var direction = (VectorUp + VectorLeft * GetFlipMultiply(entity));
+            rigidbodyData.Value.velocity -= rigidbodyData.Value.velocity.y * Vector2.up;
             rigidbodyData.Value.AddForce(direction * jumpForceData.Value, Impulse);
             _componenter.AddOrGet<AnimationJumpRequest>(entity);
             _componenter.AddOrGet<FlipJumpRightRequest>(entity);

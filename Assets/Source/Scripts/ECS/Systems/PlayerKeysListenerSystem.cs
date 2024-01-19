@@ -22,6 +22,7 @@ namespace Source.Scripts.ECS.Systems
         private EcsFilter _mousePositionFilter;
         private EcsFilter _attackFilter;
         private EcsFilter _attackBowFilter;
+        private EcsFilter _dashFilter;
         
         private InformationSystem _informationSystem;
         
@@ -40,6 +41,8 @@ namespace Source.Scripts.ECS.Systems
             _mousePositionFilter = _world.Filter<PlayerMark>().Inc<TransformData>().End();
             _attackFilter = _world.Filter<PlayerMark>().Exc<AttackReloadData>().End();
             _attackBowFilter = _world.Filter<PlayerMark>().Exc<AttackReloadData>().End();
+            _playerMoveFilter = _world.Filter<PlayerMark>().Inc<GroundTouchMark>().End();
+            _dashFilter = _world.Filter<PlayerMark>().End();
         }
 
         public void Run(IEcsSystems systems)
@@ -52,6 +55,8 @@ namespace Source.Scripts.ECS.Systems
             foreach (var entity in _mousePositionFilter) TryAddMousePosition(entity);
             foreach (var entity in _attackFilter) TryAttack(entity);
             foreach (var entity in _attackBowFilter) TryBowAttack(entity);
+            foreach (var entity in _dashFilter) TryDash(entity);
+
             DebugHealthChanger();
         }
 
@@ -62,6 +67,12 @@ namespace Source.Scripts.ECS.Systems
         private void TryBowAttack(int entity)
         {
             if (Input.GetMouseButtonDown(1))_componenter.AddOrGet<AttackRequest>(entity);
+        }
+
+        private void TryDash(int entity)
+        {
+            if (Input.GetKeyDown(KeyCode.LeftShift)) 
+                _componenter.AddOrGet<DashRequestMark>(entity);
         }
 
         private void TryAddMousePosition(int entity)

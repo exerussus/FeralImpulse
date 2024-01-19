@@ -24,7 +24,6 @@ namespace Source.Scripts.Constants
         public const string BowShoots = "BowShoots";
         public const string Cast = "Cast";
         public const string CastLoop = "CastLoop";
-    
-    
+        public const string Dash = "Dash";
     }
 }

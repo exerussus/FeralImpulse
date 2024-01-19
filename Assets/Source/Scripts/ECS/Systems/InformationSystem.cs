@@ -14,11 +14,8 @@ namespace Source.Scripts.ECS.Systems
         private EcsFilter _playerfilter;
 
         public Action OnHealthChange;
-        public Action<float> OnHealthChangeFloat;
-        
-        
-        
-        
+        public Action OnStaminaChange;
+
         public void Init(IEcsSystems systems)
         {
             _world = systems.GetWorld();
@@ -57,5 +54,16 @@ namespace Source.Scripts.ECS.Systems
         {
             return _componenter.Get<HealthData>(entity).MaxValue;
         }
+
+        public float GetMaxStamina()
+        {
+            return _componenter.Get<StaminaData>(_playerfilter.GetFirstEntity()).MaxValue;
+        }
+        
+        public float GetCurrentStamina()
+        {
+            return _componenter.Get<StaminaData>(_playerfilter.GetFirstEntity()).CurrentValue;
+        }
+
     }
 }

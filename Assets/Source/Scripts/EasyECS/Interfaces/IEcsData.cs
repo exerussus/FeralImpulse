@@ -34,7 +34,11 @@
     {
         public void InitializeValues(T argument);
     }
-    
+
+    public interface IEcsData : IEcsComponent
+    {
+    }
+
     public interface IEcsComponent {}
     
     public interface IEcsMark : IEcsComponent

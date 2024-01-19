@@ -27,7 +27,8 @@ namespace Source.Scripts.ECS.Systems
             _enemyRightFilter = _world.Filter<RightMovingMark>().Inc<FlipableMark>().Inc<TransformData>().Inc<EnemyMark>().End();
             _enemyLeftSideJumpFilter = _world.Filter<FlipJumpLeftRequest>().Inc<FlipableMark>().Inc<TransformData>().Inc<EnemyMark>().End();
             _enemyRightSideJumpFilter = _world.Filter<FlipJumpRightRequest>().Inc<FlipableMark>().Inc<TransformData>().Inc<EnemyMark>().End();
-            _playerFilter = _world.Filter<PlayerMark>().Inc<FlipableMark>().Inc<TransformData>().Exc<WeaponActivatedData>().Exc<PreparingWeaponActivatedData>().Exc<AfterKickWeaponData>().End();
+            _playerFilter = _world.Filter<PlayerMark>().Inc<LookDirectionData>().Inc<FlipableMark>().Inc<TransformData>().Exc<WeaponActivatedData>().Exc<PreparingWeaponActivatedData>()
+                .Exc<AfterKickWeaponData>().End();
         }
 
         public void Run(IEcsSystems systems)
@@ -46,6 +47,8 @@ namespace Source.Scripts.ECS.Systems
             var rawScale = Mathf.Abs(ls.x);
             var scale = value ? -rawScale : rawScale;
             transformData.Value.localScale = new Vector3(scale, ls.y, ls.z);
+            ref var lookDirectionData = ref _componenter.Get<LookDirectionData>(entity);
+            lookDirectionData.Value = scale > 0 ? Vector2.right : Vector2.left;
         }
 
         private bool GetIsFlip(int entity)

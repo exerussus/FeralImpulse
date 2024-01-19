@@ -11,15 +11,15 @@ namespace Source.Scripts.ECS.Systems
     {
         private EcsWorld _world;
         private Componenter _componenter;
-        private EntityObjectHandler _entityObjectHandler;
+        private EntityObjectHandler EntityObjectHandler { get; set; }
         
         public void Init(IEcsSystems systems)
         {
             _world = systems.GetWorld();
             _componenter = systems.GetSharedEcsSystem<Componenter>();
-            _entityObjectHandler = systems.GetSharedMonoBehaviour<EntityObjectHandler>();
+            EntityObjectHandler = systems.GetSharedMonoBehaviour<EntityObjectHandler>();
 
-            foreach (var monoBehaviour in _entityObjectHandler.InitializeObjects)
+            foreach (var monoBehaviour in EntityObjectHandler.InitializeObjects)
             {
                 var entity = _world.NewEntity();
                 
@@ -37,9 +37,12 @@ namespace Source.Scripts.ECS.Systems
                 if (monoBehaviour is ISideChecker sideChecker) InitSideChecker(entity, sideChecker);
                 if (monoBehaviour is IWeaponable weaponable) InitWeaponable(entity, weaponable);
                 if (monoBehaviour is ILightable lightable) InitLightable(entity, lightable);
+                if (monoBehaviour is IDashable dashable) InitDashable(entity, dashable);                
+                if (monoBehaviour is IStaminaExhaustable staminaExhaustable) InitStaminaExhustable(entity, staminaExhaustable);                
+                if (monoBehaviour is IExplosible explosible) InitExplosible(entity, explosible);                
             }
         }
-        
+
         public void InitAnimable(int entity, IAnimable animable)
         {
             ref var animatorData = ref _componenter.Add<AnimatorData>(entity);
@@ -100,6 +103,7 @@ namespace Source.Scripts.ECS.Systems
             jumpForceData.InitializeValues(movable);
             
             _componenter.Add<FlipableMark>(entity);
+            _componenter.Add<LookDirectionData>(entity);
         }
         
         public void InitPhysicalBody(int entity, IPhysicalBody physicalBody)
@@ -131,6 +135,24 @@ namespace Source.Scripts.ECS.Systems
         {
             ref var lightData = ref _componenter.Add<LightData>(entity);
             lightData.InitializeValues(lightable);
+        }
+
+        public void InitDashable(int entity, IDashable dashable)
+        {            
+            ref DashData dashReloadData = ref _componenter.Add<DashData>(entity);
+            dashReloadData.InitializeValues(dashable);
+        }
+        
+        public void InitStaminaExhustable(int entity, IStaminaExhaustable staminaExhaustable)
+        {            
+            ref StaminaData staminaData = ref _componenter.Add<StaminaData>(entity);
+            staminaData.InitializeValues(staminaExhaustable);
+        }
+
+        public void InitExplosible(int entity, IExplosible explodable)
+        {
+            ref ExplosionData explosionData = ref _componenter.Add<ExplosionData>(entity);
+            explosionData.InitializeValues(explodable);
         }
     }
 }

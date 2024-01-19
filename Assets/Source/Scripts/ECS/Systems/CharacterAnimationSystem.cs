@@ -26,9 +26,8 @@ namespace Source.Scripts.ECS.Systems
         private EcsFilter _sideBackDontTouchFilter;
         private EcsFilter _sideFrontTouchFilter;
         private EcsFilter _sideFrontDontTouchFilter;
-
         
-
+        private EcsFilter _characterFilter;
         
         public void Init(IEcsSystems systems)
         {
@@ -51,8 +50,8 @@ namespace Source.Scripts.ECS.Systems
             _sideBackDontTouchFilter = _world.Filter<AnimatorData>().Inc<CharacterData>().Exc<LeftSideTouchMark>().End();
             _sideFrontTouchFilter = _world.Filter<AnimatorData>().Inc<CharacterData>().Inc<RightSideTouchMark>().End();
             _sideFrontDontTouchFilter = _world.Filter<AnimatorData>().Inc<CharacterData>().Exc<RightSideTouchMark>().End();
-            
-            
+
+            _characterFilter = _world.Filter<AnimatorData>().Inc<CharacterData>().End();
         }
 
         public void Run(IEcsSystems systems)
@@ -73,6 +72,13 @@ namespace Source.Scripts.ECS.Systems
             _sideFrontTouchFilter.ForeachEntities(SetSideTouch, AnimationStrings.SideFrontTouch, true);
             _sideFrontDontTouchFilter.ForeachEntities(SetSideTouch, AnimationStrings.SideFrontTouch, false);
             
+            _characterFilter.ForeachEntities(Dash);
+        }
+
+        private void Dash(int entity)
+        {
+            ref var animatorData = ref _componenter.Get<AnimatorData>(entity);
+            animatorData.Value.SetBool(AnimationStrings.Dash, _componenter.Has<DashProgressData>(entity));
         }
 
         private void GroundTouch(int entity, bool b)
