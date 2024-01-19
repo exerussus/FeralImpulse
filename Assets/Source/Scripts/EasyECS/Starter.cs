@@ -1,5 +1,6 @@
 
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Source.EasyECS
@@ -35,6 +36,27 @@ namespace Source.EasyECS
             PrepareUpdateSystems();
             PrepareFixedUpdateSystems();
             PrepareLateUpdateSystems();
+            DependencyInject();
+        }
+
+        private void DependencyInject()
+        {
+            InjectSystems(_coreSystems);
+            InjectSystems(_initSystems);
+            InjectSystems(_updateSystems);
+            InjectSystems(_fixedUpdateSystems);
+            InjectSystems(_lateUpdateSystems);
+        }
+
+        private void InjectSystems(IEcsSystems systems)
+        {
+            foreach (var system in systems.GetAllSystems())
+            {
+                if (system is EasySystem easySystem)
+                {
+                    easySystem.PreInit(_gameSharing);
+                }
+            }
         }
         
         public override void Initialize()

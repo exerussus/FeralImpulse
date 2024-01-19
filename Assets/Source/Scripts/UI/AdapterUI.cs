@@ -9,17 +9,14 @@ namespace Source.Scripts.UI
 {
     public class AdapterUI : EasyMonoBehaviour
     {
-        private Binder _binder;
-        private InformationSystem _informationSystem;
+        [EasyInject] private Binder _binder;
+        [EasyInject] private InformationSystem _informationSystem;
         
         private HealthBarUI _healthBar;
         private StaminaBarUI _staminaBar;
         
         public override void Initialize()
         {
-            _binder = GetSharedMonoBehaviour<Binder>();
-            _informationSystem = GetSharedEcsSystem<InformationSystem>();
-            
             _healthBar = _binder.GetUIByType<HealthBarUI>();
             _staminaBar = _binder.GetUIByType<StaminaBarUI>();
             

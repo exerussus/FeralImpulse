@@ -1,25 +1,23 @@
-﻿
-using System.Linq;
+﻿using System.Linq;
 using System.Reflection;
 using UnityEngine;
 
 namespace Source.EasyECS
 {
-    public abstract class EasyMonoBehaviour : MonoBehaviour
+    public abstract class EasySystem 
     {
-        private DataPack _dataPack;
         private bool _isInitialized = false;
         private GameShare _gameShare;
+        protected Componenter Componenter;
         
-        public void PreInit(GameShare gameShare, DataPack dataPack)
+        public void PreInit(GameShare gameShare)
         {
             if (_isInitialized) return;
             _gameShare = gameShare;
-            _dataPack = dataPack;
+            Componenter = GetSharedEcsSystem<Componenter>();
+            InjectFields();
             _isInitialized = true;
         }
-
-        public virtual void Initialize(){}
 
         public T GetSharedMonoBehaviour<T>() where T : EasyMonoBehaviour
         {
@@ -31,7 +29,7 @@ namespace Source.EasyECS
             return _gameShare.GetSharedEcsSystem<T>();
         }
 
-        public void Inject()
+        public void InjectFields()
         {
             var fields = GetType().GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
             
@@ -43,19 +41,19 @@ namespace Source.EasyECS
                 {
                     var fieldType = field.FieldType;
 
-                    if (typeof(EasyMonoBehaviour).IsAssignableFrom(fieldType))
+                    if (typeof(EasySystem).IsAssignableFrom(fieldType) && typeof(IEcsSharingSystem).IsAssignableFrom(fieldType))
                     {
-                        var sharedMonoBehaviourMethod = typeof(EasyMonoBehaviour).GetMethod("GetSharedMonoBehaviour").MakeGenericMethod(fieldType);
-                        var sharedMonoBehaviour = sharedMonoBehaviourMethod.Invoke(this, null);
-
-                        field.SetValue(this, sharedMonoBehaviour);
-                    }
-                    else if (typeof(EasySystem).IsAssignableFrom(fieldType) && typeof(IEcsSharingSystem).IsAssignableFrom(fieldType))
-                    {
-                        var sharedEasySystemMethod = typeof(EasyMonoBehaviour).GetMethod("GetSharedEcsSystem").MakeGenericMethod(fieldType);
+                        var sharedEasySystemMethod = typeof(EasySystem).GetMethod("GetSharedEcsSystem").MakeGenericMethod(fieldType);
                         var sharedSystem = sharedEasySystemMethod.Invoke(this, null);
 
                         field.SetValue(this, sharedSystem);
+                    }
+                    else if (typeof(EasyMonoBehaviour).IsAssignableFrom(fieldType))
+                    {
+                        var sharedMonoBehaviourMethod = typeof(EasySystem).GetMethod("GetSharedMonoBehaviour").MakeGenericMethod(fieldType);
+                        var sharedMonoBehaviour = sharedMonoBehaviourMethod.Invoke(this, null);
+
+                        field.SetValue(this, sharedMonoBehaviour);
                     }
                 }
             }

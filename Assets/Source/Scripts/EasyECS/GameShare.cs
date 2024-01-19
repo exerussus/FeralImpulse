@@ -22,7 +22,7 @@ namespace Source.EasyECS
         public Dictionary<Type, DataPack> MonoBehShared => _monoBehShared;
         public Dictionary<Type, IEcsSharingSystem> EcsShared => _ecsShared;
         
-        public T GetSharedData<T>() where T : EasyMonoBehaviour
+        public T GetSharedMonoBehaviour<T>() where T : EasyMonoBehaviour
         {
             var classPack = _monoBehShared[typeof(T)];
             var monoBeh = classPack.MonoBehaviour;

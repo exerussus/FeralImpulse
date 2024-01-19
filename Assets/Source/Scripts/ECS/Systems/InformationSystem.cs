@@ -6,7 +6,7 @@ using Source.Scripts.ECS.Components.Marks;
 
 namespace Source.Scripts.ECS.Systems
 {
-    public class InformationSystem : IEcsInitSystem, IEcsSharingSystem
+    public class InformationSystem : EasySystem, IEcsInitSystem, IEcsSharingSystem
     {
         private EcsWorld _world;
         private Componenter _componenter;

@@ -50,6 +50,11 @@ namespace Source.EasyECS
             {
                 PreInit(monoBeh);
             }
+
+            foreach (var easyMonoBehaviour in _share) InjectDependencies(easyMonoBehaviour);
+            foreach (var easyMonoBehaviour in _awake) InjectDependencies(easyMonoBehaviour);
+            foreach (var easyMonoBehaviour in _start) InjectDependencies(easyMonoBehaviour);
+            
         }
         
         private void Awake()
@@ -71,5 +76,13 @@ namespace Source.EasyECS
                 bootQueue.Add(_sharedData[initMonoBeh.GetType()]);
             }
         }
+        
+        private void InjectDependencies(EasyMonoBehaviour easyMonoBehaviour)
+        {
+            easyMonoBehaviour.Inject();
+        }
     }
+    
+    
+    public class EasyInjectAttribute : PropertyAttribute { }
 }
