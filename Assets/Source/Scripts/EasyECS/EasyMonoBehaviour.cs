@@ -1,7 +1,9 @@
 ﻿
 using System.Linq;
 using System.Reflection;
+using Source.MonoBehaviours;
 using UnityEngine;
+using Binder = Source.MonoBehaviours.Binder;
 
 namespace Source.EasyECS
 {
@@ -54,6 +56,15 @@ namespace Source.EasyECS
                     {
                         var sharedEasySystemMethod = typeof(EasyMonoBehaviour).GetMethod("GetSharedEcsSystem").MakeGenericMethod(fieldType);
                         var sharedSystem = sharedEasySystemMethod.Invoke(this, null);
+
+                        field.SetValue(this, sharedSystem);
+                    }
+                    else if (typeof(MonoBehaviourUI).IsAssignableFrom(fieldType))
+                    {
+                        var binder = GetSharedMonoBehaviour<Binder>();
+
+                        var sharedEasySystemMethod = typeof(Binder).GetMethod("GetUIByType").MakeGenericMethod(fieldType);
+                        var sharedSystem = sharedEasySystemMethod.Invoke(binder, null);
 
                         field.SetValue(this, sharedSystem);
                     }

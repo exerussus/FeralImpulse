@@ -30,6 +30,7 @@ namespace Source.EasyECS
             fixedUpdateSystems.Add(new DashSystem());
             fixedUpdateSystems.Add(new StaminaSystem());
             fixedUpdateSystems.Add(new ExplosionSystem());
+            fixedUpdateSystems.Add(new AISystem());
         }
 
         protected override void SetLateUpdateSystems(IEcsSystems lateUpdateSystems)

@@ -7,17 +7,14 @@ using Source.Scripts.MonoBehaviours.Abstractions;
 
 namespace Source.Scripts.ECS.Systems
 {
-    public class InitializerSystem : IEcsInitSystem
+    public class InitializerSystem : EasySystem, IEcsInitSystem
     {
         private EcsWorld _world;
-        private Componenter _componenter;
-        private EntityObjectHandler EntityObjectHandler { get; set; }
+        [EasyInject] private EntityObjectHandler EntityObjectHandler;
         
         public void Init(IEcsSystems systems)
         {
             _world = systems.GetWorld();
-            _componenter = systems.GetSharedEcsSystem<Componenter>();
-            EntityObjectHandler = systems.GetSharedMonoBehaviour<EntityObjectHandler>();
 
             foreach (var monoBehaviour in EntityObjectHandler.InitializeObjects)
             {
@@ -40,119 +37,133 @@ namespace Source.Scripts.ECS.Systems
                 if (monoBehaviour is IDashable dashable) InitDashable(entity, dashable);                
                 if (monoBehaviour is IStaminaExhaustable staminaExhaustable) InitStaminaExhustable(entity, staminaExhaustable);                
                 if (monoBehaviour is IExplosible explosible) InitExplosible(entity, explosible);                
+                if (monoBehaviour is IWatcher watcher) InitWatcher(entity, watcher);                
+                if (monoBehaviour is ISleepable sleeper) InitSleeper(entity, sleeper);                
             }
         }
 
-        public void InitAnimable(int entity, IAnimable animable)
+        private void InitAnimable(int entity, IAnimable animable)
         {
-            ref var animatorData = ref _componenter.Add<AnimatorData>(entity);
+            ref var animatorData = ref Componenter.Add<AnimatorData>(entity);
             animatorData.InitializeValues(animable);
         }
         
-        public void InitCharacter(int entity, ICharacter character)
+        private void InitCharacter(int entity, ICharacter character)
         {
-            ref var characterData = ref _componenter.Add<CharacterData>(entity);
+            ref var characterData = ref Componenter.Add<CharacterData>(entity);
             characterData.InitializeValues(character);
         }
         
-        public void InitDestructible(int entity, IDestructible destructible)
+        private void InitDestructible(int entity, IDestructible destructible)
         {
-            _componenter.Add<DestructibleMark>(entity);
+            Componenter.Add<DestructibleMark>(entity);
         }
         
-        public void InitDisplayable(int entity, IDisplayable displayable)
+        private void InitDisplayable(int entity, IDisplayable displayable)
         {
-            ref var spriteRenderData = ref _componenter.Add<SpriteRenderData>(entity);
+            ref var spriteRenderData = ref Componenter.Add<SpriteRenderData>(entity);
             spriteRenderData.InitializeValues(displayable);
         }
         
-        public void InitEnemy(int entity, IEnemy enemy)
+        private void InitEnemy(int entity, IEnemy enemy)
         {
-            _componenter.Add<EnemyMark>(entity);
+            Componenter.Add<EnemyMark>(entity);
         }
         
-        public void InitEntityObject(int entity, IEntityObject entityObject)
+        private void InitEntityObject(int entity, IEntityObject entityObject)
         {
-            ref var entityObjectData = ref _componenter.Add<EntityObjectData>(entity);
+            ref var entityObjectData = ref Componenter.Add<EntityObjectData>(entity);
             entityObjectData.InitializeValues(entity, entityObject);
             
-            ref var transformData = ref _componenter.Add<TransformData>(entity);
+            ref var transformData = ref Componenter.Add<TransformData>(entity);
             transformData.InitializeValues(entityObject);
             
-            _componenter.Add<DontInitializeColliderMark>(entity);
+            Componenter.Add<DontInitializeColliderMark>(entity);
         }
         
-        public void InitGroundChecker(int entity, IGroundChecker groundChecker)
+        private void InitGroundChecker(int entity, IGroundChecker groundChecker)
         {
-            ref var groundCheckData = ref _componenter.Add<GroundCheckerData>(entity);
+            ref var groundCheckData = ref Componenter.Add<GroundCheckerData>(entity);
             groundCheckData.InitializeValues(groundChecker);
         }
         
-        public void InitHealth(int entity, IHealthy healthy)
+        private void InitHealth(int entity, IHealthy healthy)
         {
-            ref var healthData = ref _componenter.Add<HealthData>(entity);
+            ref var healthData = ref Componenter.Add<HealthData>(entity);
             healthData.InitializeValues(healthy);
         }
         
-        public void InitMovable(int entity, IMovable movable)
+        private void InitMovable(int entity, IMovable movable)
         {
-            ref var moveSpeedData = ref _componenter.Add<MoveSpeedData>(entity);
+            ref var moveSpeedData = ref Componenter.Add<MoveSpeedData>(entity);
             moveSpeedData.InitializeValues(movable);
             
-            ref var jumpForceData = ref _componenter.Add<JumpForceData>(entity);
+            ref var jumpForceData = ref Componenter.Add<JumpForceData>(entity);
             jumpForceData.InitializeValues(movable);
             
-            _componenter.Add<FlipableMark>(entity);
-            _componenter.Add<LookDirectionData>(entity);
+            Componenter.Add<FlipableMark>(entity);
+            Componenter.Add<LookDirectionData>(entity);
         }
         
-        public void InitPhysicalBody(int entity, IPhysicalBody physicalBody)
+        private void InitPhysicalBody(int entity, IPhysicalBody physicalBody)
         {
-            ref var rigidbodyData = ref _componenter.Add<RigidbodyData>(entity);
+            ref var rigidbodyData = ref Componenter.Add<RigidbodyData>(entity);
             rigidbodyData.InitializeValues(physicalBody);
         }
         
-        public void InitPlayer(int entity, IPlayer player)
+        private void InitPlayer(int entity, IPlayer player)
         {
-            _componenter.Add<PlayerMark>(entity);
+            Componenter.Add<PlayerMark>(entity);
         }
         
-        public void InitSideChecker(int entity, ISideChecker sideChecker)
+        private void InitSideChecker(int entity, ISideChecker sideChecker)
         {
-            ref var leftSideTouchData = ref _componenter.Add<LeftSideCheckerData>(entity);
+            ref var leftSideTouchData = ref Componenter.Add<LeftSideCheckerData>(entity);
             leftSideTouchData.InitializeValues(sideChecker);
-            ref var rightSideTouchData = ref _componenter.Add<RightSideCheckerData>(entity);
+            ref var rightSideTouchData = ref Componenter.Add<RightSideCheckerData>(entity);
             rightSideTouchData.InitializeValues(sideChecker);
         }
         
-        public void InitWeaponable(int entity, IWeaponable weaponable)
+        private void InitWeaponable(int entity, IWeaponable weaponable)
         {
-            ref var weaponColliderHandler = ref _componenter.Add<WeaponHandlerData>(entity);
+            ref var weaponColliderHandler = ref Componenter.Add<WeaponHandlerData>(entity);
             weaponColliderHandler.InitializeValues(weaponable);
         }
 
-        public void InitLightable(int entity, ILightable lightable)
+        private void InitLightable(int entity, ILightable lightable)
         {
-            ref var lightData = ref _componenter.Add<LightData>(entity);
+            ref var lightData = ref Componenter.Add<LightData>(entity);
             lightData.InitializeValues(lightable);
         }
 
-        public void InitDashable(int entity, IDashable dashable)
+        private void InitDashable(int entity, IDashable dashable)
         {            
-            ref DashData dashReloadData = ref _componenter.Add<DashData>(entity);
+            ref DashData dashReloadData = ref Componenter.Add<DashData>(entity);
             dashReloadData.InitializeValues(dashable);
         }
         
-        public void InitStaminaExhustable(int entity, IStaminaExhaustable staminaExhaustable)
+        private void InitStaminaExhustable(int entity, IStaminaExhaustable staminaExhaustable)
         {            
-            ref StaminaData staminaData = ref _componenter.Add<StaminaData>(entity);
+            ref StaminaData staminaData = ref Componenter.Add<StaminaData>(entity);
             staminaData.InitializeValues(staminaExhaustable);
         }
 
-        public void InitExplosible(int entity, IExplosible explodable)
+        private void InitExplosible(int entity, IExplosible explodable)
         {
-            ref ExplosionData explosionData = ref _componenter.Add<ExplosionData>(entity);
+            ref ExplosionData explosionData = ref Componenter.Add<ExplosionData>(entity);
             explosionData.InitializeValues(explodable);
+        }
+        
+        private void InitWatcher(int entity, IWatcher watcher)
+        {
+            ref WatcherData watcherData = ref Componenter.Add<WatcherData>(entity);
+            watcherData.InitializeValues(watcher);
+        }
+        
+        private void InitSleeper(int entity, ISleepable sleeper)
+        {
+            ref SleepData sleepData = ref Componenter.Add<SleepData>(entity);
+            sleepData.InitializeValues(sleeper);
         }
     }
 }

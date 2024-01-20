@@ -7,34 +7,34 @@ using UnityEngine;
 
 namespace Source.Scripts.ECS.Systems
 {
-    public class HealthSystem : IEcsInitSystem, IEcsRunSystem
+    public class HealthSystem : EasySystem, IEcsInitSystem, IEcsRunSystem
     {
         private EcsWorld _world;
         private Componenter _componenter;
         private EcsFilter _weaponRequestsFilter;
         private EcsFilter _healthFilter;
-
-        
-        
-        
+        private EcsFilter _sleepDamageFilter;
         
         public void Init(IEcsSystems systems)
         {
             _world = systems.GetWorld();
             _componenter = systems.GetSharedEcsSystem<Componenter>();
             
-            
             _weaponRequestsFilter = _world.Filter<HealthWeaponDamageRequestData>().End();
             _healthFilter = _world.Filter<HealthData>().Exc<DeadMark>().End();
+            _sleepDamageFilter = _world.Filter<HealthWeaponDamageRequestData>().Inc<ShouldSleepNowMark>().End();
         }
 
         public void Run(IEcsSystems systems)
         {
             foreach (var entity in _weaponRequestsFilter) WeaponDamage(entity);
             foreach (var entity in _healthFilter) DeadCheck(entity);
-            
-            
+            foreach (var entity in _sleepDamageFilter) SleepDamage(entity);
+        }
 
+        private void SleepDamage(int entity)
+        {
+            Componenter.Del<ShouldSleepNowMark>(entity);
         }
 
         private void WeaponDamage(int entity)

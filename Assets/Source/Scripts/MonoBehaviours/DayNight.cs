@@ -10,17 +10,20 @@ namespace Source.Scripts.MonoBehaviours
         [SerializeField] private float morningTime = 6 * 60 * 60;
         [SerializeField] private float eveningTime = 18 * 60 * 60;
         private float _currentTime = 0;
+        public float CurrentTime => _currentTime;
         private const float SecondsInDay = 24 * 60 * 60;
+        
+        public bool IsDay => _currentTime > morningTime && _currentTime < eveningTime; 
 
         private void FixedUpdate()
         {
-            _currentTime += timeMultiply * Time.fixedDeltaTime % SecondsInDay;
-            //Debug.Log($"{_currentTime} isDay={IsDay()}");
-        }
-
-        public bool IsDay()
-        {
-            return _currentTime > morningTime && _currentTime < eveningTime;
+            _currentTime = (_currentTime + timeMultiply * Time.fixedDeltaTime) % SecondsInDay;
         }
     }
 }
+/// система AI передвижения для ботов через марки LeftMoving
+/// одна система вешает марки состояний
+/// другая система видит состояние, и определяет поведение
+///
+/// 1.система вешает должен-недолжен спать (не марка, а дата)
+/// в health системе снимать дату которая делает спящим

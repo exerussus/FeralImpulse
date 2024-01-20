@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Source.MonoBehaviours;
 using UnityEngine;
 
 namespace Source.EasyECS
@@ -13,7 +14,7 @@ namespace Source.EasyECS
         [SerializeField] private List<DataPack> bootQueue;
         private Dictionary<Type, DataPack> _sharedData;
         [SerializeField] private GameShare gameShare;
-        
+
         private void PreInit(EasyMonoBehaviour easyMonoBeh)
         {
             if (!_sharedData.ContainsKey(easyMonoBeh.GetType()))
@@ -21,11 +22,16 @@ namespace Source.EasyECS
                 var newPack = new DataPack(easyMonoBeh.GetType(), easyMonoBeh);
                 easyMonoBeh.PreInit(gameShare, newPack);
                 _sharedData[easyMonoBeh.GetType()] = newPack;
-                
+
                 if (easyMonoBeh is EcsStarter ecsStarter)
                 {
                     ecsStarter.SetSharedData(gameShare);
                     ecsStarter.PreInit();
+                }
+
+                if (easyMonoBeh is Binder binder)
+                {
+                    //binder.PreInitialize();
                 }
             }
         }
@@ -35,17 +41,17 @@ namespace Source.EasyECS
             _sharedData = new Dictionary<Type, DataPack>();
             bootQueue = new List<DataPack>();
             gameShare = new GameShare(_sharedData);
-                        
+
             foreach (var monoBeh in _share)
             {
                 PreInit(monoBeh);
             }
-            
+
             foreach (var monoBeh in _awake)
             {
                 PreInit(monoBeh);
             }
-            
+
             foreach (var monoBeh in _start)
             {
                 PreInit(monoBeh);
@@ -54,13 +60,12 @@ namespace Source.EasyECS
             foreach (var easyMonoBehaviour in _share) InjectDependencies(easyMonoBehaviour);
             foreach (var easyMonoBehaviour in _awake) InjectDependencies(easyMonoBehaviour);
             foreach (var easyMonoBehaviour in _start) InjectDependencies(easyMonoBehaviour);
-            
         }
-        
+
         private void Awake()
         {
             PreInitAll();
-            
+
             foreach (var initMonoBeh in _awake)
             {
                 initMonoBeh.Initialize();
@@ -76,13 +81,15 @@ namespace Source.EasyECS
                 bootQueue.Add(_sharedData[initMonoBeh.GetType()]);
             }
         }
-        
+
         private void InjectDependencies(EasyMonoBehaviour easyMonoBehaviour)
         {
             easyMonoBehaviour.Inject();
         }
     }
-    
-    
-    public class EasyInjectAttribute : PropertyAttribute { }
+
+
+    public class EasyInjectAttribute : PropertyAttribute
+    {
+    }
 }
